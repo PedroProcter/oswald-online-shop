@@ -1,0 +1,31 @@
+@page "/admin/login"
+
+<PageTitle>Login</PageTitle>
+
+<section class="d-flex bg-white justify-content-center">
+    <article class="p-md-5 card text-center">
+        <p class="p-md-2 card-title">Sign In</p>
+        <div>
+            <div class="p-md-2 form-group">
+                <label for="admin_username">Username</label>
+                <input class="form-control" @bind="username" type="text" id="admin_username" name="admin_username">
+            </div>
+            <div class="p-md-2 form-group">
+                <label for="admin_password">Password</label>
+                <input class="form-control" @bind="password" type="password" id="admin_password" name="admin_password">
+            </div>
+            <p class="invisible text-danger">Username or Password are not correct</p>
+            <button class="m-md-4 btn btn-outline-primary" @onclick="SignIn">Sign In</button>
+        </div>
+    </article>
+</section>
+
+@code {
+    private string username;
+    private string password;
+
+    private void SignIn()
+    {
+        Console.WriteLine("sign in successfull...");
+    }
+}

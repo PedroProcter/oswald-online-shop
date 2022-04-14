@@ -1,0 +1,14 @@
+﻿namespace oswald_online_shop.Models
+{
+    public class Orders
+    {
+        public int id { get; set; }
+        public int cartId { get; set; }
+        public int productId { get; set; }
+
+        public string state { get; set; }
+        public double price { get; set; }
+
+
+    }
+}

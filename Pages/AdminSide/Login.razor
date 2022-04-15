@@ -8,13 +8,15 @@
         <div>
             <div class="p-md-2 form-group">
                 <label for="admin_username">Username</label>
-                <input class="form-control" @bind="username" type="text" id="admin_username" name="admin_username">
+                <input class="form-control" @bind="username" type="text" id="admin_username" name="admin_username"
+                    placeholder="username">
             </div>
             <div class="p-md-2 form-group">
                 <label for="admin_password">Password</label>
-                <input class="form-control" @bind="password" type="password" id="admin_password" name="admin_password">
+                <input class="form-control" @bind="password" type="password" id="admin_password" name="admin_password"
+                    placeholder="password">
             </div>
-            <p class="invisible text-danger">Username or Password are not correct</p>
+            <p class="@validationText text-danger">Username or Password are not correct</p>
             <button class="m-md-4 btn btn-outline-primary" @onclick="SignIn">Sign In</button>
         </div>
     </article>
@@ -23,9 +25,22 @@
 @code {
     private string username;
     private string password;
+    private string validationText = "invisible";
 
     private void SignIn()
     {
-        Console.WriteLine("sign in successfull...");
+        MyDBContext context = new MyDBContext();
+        var user = context.Users.Where(u => u.username == this.username).Where(u => u.pwd == this.password);
+        var validated = user.Count();
+        if (validated > 0)
+        {
+            Console.WriteLine($"sign in successfull... {user}");
+        }
+        else
+        {
+            //Console.WriteLine("Sign In failed...");
+            this.validationText = "";
+        }
+
     }
 }

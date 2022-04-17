@@ -2,13 +2,21 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using oswald_online_shop.Data;
 using MudBlazor.Services;
+using oswald_online_shop.Data.ProductServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMemoryCache();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+
+
+
+
 
 var app = builder.Build();
 

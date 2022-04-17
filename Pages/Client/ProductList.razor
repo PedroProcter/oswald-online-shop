@@ -1,0 +1,41 @@
+﻿@page "/ProductList"
+@using oswald_online_shop.Data.ProductServices
+<p>Lista de productos</p>
+
+@if (products==null)
+{
+    <p><em>Loading..</em></p>
+
+}else
+{
+    @foreach(var product in products)
+    {
+          <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">@product.name</h5>
+            <p class="card-text">@product.category</p>
+          </div>
+        </div>
+    }
+}
+
+@code {
+
+    public  static IEnumerable<Product> products{ get; set; }
+    public static MyDBContext MydbContext = new MyDBContext();
+    private static ProductService productServices = new ProductService(MydbContext);
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            products = await productServices.getAllProducts();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
+    }
+
+}

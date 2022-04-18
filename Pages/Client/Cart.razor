@@ -1,0 +1,97 @@
+@page "/cart"
+@layout CartLayout;
+@* Injectamos lo siguiente para redireccionar a los usuarios.*@
+@* @inject NavigationManager NavManager;*@
+@using oswald_online_shop.Data.ProductServices
+
+
+        <div class="grid grid-cols-12 gap-14">
+      
+      @if (products==null)
+{
+    <p class="relative text-3xl text-black">Hola putos</p>   
+     <div class="col-span-8">
+            <div class="w-full">
+
+      <div class="ml-8 p-10 w-full drop-shadow-m rounded-lg bg-white hover:bg-slate-200 transition-colors duration-300 flex">
+          <div class="basis-1/4 mr-10 ">
+<img class="object-cover rounded" src="https://images.pexels.com/photos/2872755/pexels-photo-2872755.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+
+          </div>
+          <p>NO hay articulos en el carrito</p>
+        </div>
+
+                </div>
+                </div>
+
+
+}else{
+          <!--Primera seccion-->
+          <div class="col-span-8">
+            <div class="w-full">
+                  @foreach(var product in products)
+    {
+      <div class="ml-8 p-10 w-full drop-shadow-m rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
+            <input type="checkbox" class="self-center accent-pink-500 mr-6">
+
+          <div class="w-1/4 mr-10 ">
+<img class="object-cover rounded" src="https://images.pexels.com/photos/2872755/pexels-photo-2872755.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+
+          </div>
+          <div class="basis-3/4">
+            <p class="font-semibold text-lg mb-2">@product.name</p>
+            <p class="font-thin">@product.category.</p>
+            <button class="bg-amber-600 hover:bg-amber-700 hover:transition-colors py-1 px-3 rounded-lg mt-5 text-white">Comprar ahora</button>
+          </div>
+        </div>
+
+    }
+        
+            </div>
+          </div>
+      <!--Segunda seccion-->
+          <div class="col-span-3 ">
+            <div class="w-full">
+              
+
+      <div class=" p-10 w-full drop-shadow-m rounded-lg bg-white hover:bg-slate-200 transition-colors flex duration-300 ">
+
+          <div class="basis-3/4">
+            <p class="font-semibold text-lg mb-2">Total a pagar</p>
+            <button class="bg-yellow-400 hover:bg-yellow-500 hover:transition-colors py-1 px-3 rounded-lg duration-500 mt-5 text-white">Proceder al pago</button>
+          </div>
+      </div>
+      
+      
+            </div>
+          </div>
+}
+        </div>
+
+@code {
+
+
+@code {
+
+    public  static IEnumerable<Product> products{ get; set; }
+    public static MyDBContext MydbContext = new MyDBContext();
+    private static ProductService productServices = new ProductService(MydbContext);
+    protected override async Task OnInitializedAsync()
+    {
+               //redirect NavManager.NavigateTo("/productlist");
+
+        try
+        {
+            products = await productServices.getAllProducts();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
+    }
+
+}
+
+
+}

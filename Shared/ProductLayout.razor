@@ -1,0 +1,42 @@
+@inherits LayoutComponentBase
+
+<PageTitle>slider</PageTitle>
+
+
+        <UserLoged/>
+   <div class="flex h-screen">
+       <div class="border-t-2 hidden md:block">
+          <!--Side bar-->
+          <div class="relative flex h-full flex-col border-r-2 border-gray-200 bg-white w-56">
+            <h1 class="font-smibold text-2xl text-center pt-3">Categorias</h1>
+            <!--Categoria de alimentos-->
+            <div class="mt-2  group  w-full  py-4 hover:bg-gray-100 transition duration-500 rounded ">
+              <div class="flex justify-center">
+              <p class="text-lg">Alimentos</p>
+              <svg class="group-hover:animate-pulse fill-current h-5 self-center -z-10 transform group-hover:z-10 group-hover:translate-x-2 transition duration-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/></svg>
+              </div>
+              <div class=" transform -translate-x-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 absolute -right-[171px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
+                <!--Contenido de categorias-->
+                <ul class="">
+                  <li>Carne</li>
+                  <li>Congelados</li>
+                  <li>Galletas</li>
+                  <li>Dulces</li>
+                </ul>
+              </div>
+            </div>
+      
+      
+          </div>
+      
+
+
+        </div>
+                  <div class="w-full">
+                        @Body
+
+          </div>
+        </div>
+
+        
+  

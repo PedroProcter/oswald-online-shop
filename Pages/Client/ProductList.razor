@@ -1,24 +1,38 @@
 ﻿@page "/ProductList"
+@layout ProductLayout;
 @using oswald_online_shop.Data.ProductServices
-<p>Lista de productos</p>
+      <div class="bg-gray-100 p-4">
+        <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
+      </div>
+
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 p-6">
 
 @if (products==null)
 {
-    <p><em>Loading..</em></p>
-
+      <div class="bg-gray-100 p-4">
+        <h1 class="text-center text-2xl font-semibold text-slate-800">NO se han agregado productos</h1>
+      </div>
 }else
 {
     @foreach(var product in products)
     {
-          <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">@product.name</h5>
-            <p class="card-text">@product.category</p>
+        <div class="p-4 md:w-full">
+          <div class="h-full overflow-hidden rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 shadow-xl hover:shadow-2xl transition duration-300">
+            <img class="duration-400 w-full scale-110 object-cover object-center transition-all hover:scale-100 md:h-36 lg:h-48" src="https://images.pexels.com/photos/2872755/pexels-photo-2872755.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="blog" />
+            <div class="p-6">
+              <h2 class="title-font mb-1 text-xs font-medium tracking-widest text-gray-400">@product.category</h2>
+              <h1 class="title-font mb-3 text-lg font-medium text-gray-600">@product.name</h1>
+              <div class="flex flex-wrap items-center justify-center">
+                <button class="shadow-cla-blue rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 px-4 py-1 drop-shadow-md transition duration-300 hover:scale-105">Agregar al carrito</button>
+              </div>
+            </div>
           </div>
         </div>
+
+        
     }
 }
+</div>
 
 @code {
 

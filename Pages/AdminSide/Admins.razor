@@ -1,0 +1,38 @@
+@page "/admin/admins"
+
+<PageTitle>Admins CPanel</PageTitle>
+
+<section class="d-flex bg-white justify-content-center">
+    <article class="p-md-5 card text-center">
+        <p class="p-md-2 card-title">Admin Form</p>
+        <div>
+            <div class="p-md-2 form-group">
+                <label for="admin_username">Username</label>
+                <input class="form-control" @bind="username" type="text" id="admin_username" name="admin_username"
+                    placeholder="username" required>
+            </div>
+            <div class="p-md-2 form-group">
+                <label for="admin_password">Password</label>
+                <input class="form-control" @bind="password" type="password" id="admin_password" name="admin_password"
+                    placeholder="password" required>
+            </div>
+            <button class="m-md-4 btn btn-outline-primary" @onclick="Add">Add</button>
+        </div>
+    </article>
+</section>
+
+@code {
+    private string username;
+    private string password;
+
+    private void Add()
+    {
+        Admin newAdmin = new Admin();
+        newAdmin.username = this.username;
+        newAdmin.pwd = this.password;
+        MyDBContext context = new MyDBContext();
+        context.Admins.Add(newAdmin);
+        context.SaveChanges();
+
+    }
+}

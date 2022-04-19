@@ -5,13 +5,21 @@
 <EditForm Model="client">
     @if (@msg != "")
             {
-                <div class="alert alert-danger" role="alert">
-                    @msg
+                <div class="w-full  mx-auto relative top-1 flex justify-center ">
+                    <div class="absolute w-1/4 bg-yellow-400 py-3 border-b-4 border-yellow-600 rounded-md">
+                    <div class="flex justify-center items-center">
+                                                <h1 class="text-center text-black font-semibold">@msg</h1>
+
+                                                <button @onclick="message" class="ml-5 bg-red-500 rounded-full w-5 hover:rotate-45 transition duration-500"><svg class="fill-current h-5 text-white hover:rotate-45 transition duration-500 "xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg></button>
+
+                    </div>
+
+                    </div>
                 </div>
 
 
             }
-    <div class="w-80 bg-white rounded-tr-3xl  rounded-bl-3xl mx-auto overflow-hidden shadow-xl mb-10">
+    <div class="w-96 bg-white rounded-tr-3xl  rounded-bl-3xl mx-auto overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 mb-10">
 
         <div class="px-10 pt-4 pb-8 bg-white dark:bg-gray-800  ">
           <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center">Registro</h1>
@@ -76,20 +84,16 @@
     private Client client = new Client();
     private Orders order = new Orders();
     private Cart cart = new Cart();
-
-
     //Variables
     private string confirPassword;
     private string password;
-    private string msg;
-
+    private string msg ="";
+void message(){
+  msg = "";
+}
     private async Task addUser()
     {
-
-
-
         //client
-
 
         //user
         user.username = client.email;
@@ -100,9 +104,10 @@
         cart.idClient = client.email;
         cart.location = "Santo Domingo";
         client.cartId = client.email;
-        if(client.name==null ) 
-        {
 
+        List<string> datos = new List<string>(){client.name,client.lastName,client.email,Convert.ToString(client.birthDay), password, confirPassword};
+        if(validation.validateFields(datos)) 
+        {
             msg = "Hay campos vacios";
         }
         else
@@ -113,7 +118,7 @@
                     await clientService.insertClient(client);
                     await userService.insertUser(user);
                     await cartService.insertCart(cart);
-                    NavigationManager.NavigateTo("/productlist");   
+                    NavigationManager.NavigateTo("/user/login");   
                 }catch(Exception e)
                 {
                     throw e;
@@ -121,7 +126,7 @@
             }
             else
             {
-                msg="Bad pass";
+                msg="Las contraseñas no coinciden";
             }
 
         }

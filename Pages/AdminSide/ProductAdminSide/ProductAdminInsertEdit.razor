@@ -1,0 +1,98 @@
+﻿@page "/productInsertEdit"
+@page "/productInsertEdit/{id:int}"
+@layout Simple;
+@using oswald_online_shop.Data.AdminServices.ProductAdminServices
+@inject NavigationManager NavigationManager
+@if (product==null)
+{
+    <spam>loanding..</spam>
+}
+else
+{
+     @if (@msg != "")
+            {
+                <div class="alert alert-danger" role="alert">
+                    @msg
+                </div>
+            }
+    <EditForm Model="product">
+        <table class="table">
+
+             <tr>
+                <td>Nombre</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.name"/></td>
+            </tr>
+
+            <tr>
+                <td>Categoría</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.category"/></td>
+            </tr>
+            <tr>
+                <td>Precio</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.price"/></td>
+            </tr>
+            <tr>
+                <td>Imagen</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.photoURL"/></td>
+            </tr>
+             <tr>
+                <td>Cantidad disponible</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.Stock"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center">
+                    <input class="btn btn-success" type="submit" value="Save" @onclick="saveProduct" />
+                    <a href="/Admin/ProductList"><input class="btn btn-danger" type="button" value="Cancel" /></a>
+                </td>
+            </tr>
+
+        </table>
+    </EditForm>
+}
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string msg="";
+    private static MyDBContext myDBContext = new MyDBContext();
+    private Product product = new Product();
+    private ProductAdminService productAdminService= new ProductAdminService(myDBContext);
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (id != 0)
+            {
+                product = await productAdminService.getProduct(id);
+            }
+
+        }catch(Exception e)
+        {
+            throw e;
+        }     
+    }
+    protected async Task saveProduct()
+    {
+        if (product.name==null || product.category==null ||product.price==0|| product.photoURL==null)
+        {
+            msg = "No pueden haber campos nulos";
+        }
+        else
+        {
+            try
+            {
+                await productAdminService.saveProduct(product);
+                NavigationManager.NavigateTo("/Admin/ProductList");
+            }catch(Exception e)
+            {
+                throw e;
+            }
+        }
+    }
+
+
+
+
+}

@@ -1,0 +1,68 @@
+﻿@page "/productdelete/{id:int}"
+@layout Simple;
+@using oswald_online_shop.Data.AdminServices.ProductAdminServices
+@inject NavigationManager NavigationManager
+@if (product==null)
+{
+    <spam>loanding..</spam>
+}
+else
+{
+    <EditForm Model="product">
+        <table class="table">
+
+             <tr>
+                <td>Nombre</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.name"/></td>
+            </tr>
+
+            <tr>
+                <td>Categoría</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.category"/></td>
+            </tr>
+            <tr>
+                <td>Precio</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.price"/></td>
+            </tr>
+            <tr>
+                <td>Imagen</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.photoURL"/></td>
+            </tr>
+             <tr>
+                <td>Cantidad disponible</td>
+                <td><input class="form-control col-sm-4" type="text" @bind="product.Stock"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center">
+                    <input class="btn btn-success" type="submit" value="Borrar" @onclick="deleteProduct" />
+                    <a href="/Admin/ProductList"><input class="btn btn-danger" type="button" value="Cancelar" /></a>
+                </td>
+            </tr>
+
+        </table>
+    </EditForm>
+}
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private static MyDBContext myDBContext = new MyDBContext();
+    private Product product = new Product();
+    private ProductAdminService productAdminService= new ProductAdminService(myDBContext);
+    protected override async Task OnInitializedAsync()
+    {
+        product = await productAdminService.getProduct(id);
+    }
+    protected async Task deleteProduct()
+    {
+        await productAdminService.deleteProduct(id);
+        NavigationManager.NavigateTo("/Admin/ProductList");
+    }
+
+
+
+
+}

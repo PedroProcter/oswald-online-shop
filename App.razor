@@ -5,8 +5,13 @@
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
+            <div class="min-h-screen flex justify-center items-center">
+                <div class="flex selection:bg-yellow-300 space-x-3 w-full justify-center">
+            <p>404</p>
+            <span class="h-6 w-[1.5px] bg-gray-900"></span>
+            <p>Not found</p>
+
+                </div>
+            </div>
     </NotFound>
 </Router>

@@ -7,7 +7,7 @@
         public string name { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
-        public string birthDay { get; set; }
+        public DateTime birthDay { get; set; }
 
     }
 }

@@ -1,31 +1,40 @@
 @page "/user/register"
 @layout Simple;
+@inject NavigationManager NavigationManager
+
+<EditForm Model="client">
+    @if (@msg != "")
+            {
+                <div class="alert alert-danger" role="alert">
+                    @msg
+                </div>
 
 
-     <div class="w-80 bg-white rounded-tr-3xl  rounded-bl-3xl mx-auto overflow-hidden shadow-xl mb-10">
+            }
+    <div class="w-80 bg-white rounded-tr-3xl  rounded-bl-3xl mx-auto overflow-hidden shadow-xl mb-10">
 
         <div class="px-10 pt-4 pb-8 bg-white dark:bg-gray-800  ">
           <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 text-center">Registro</h1>
           <div class="mt-12" >
-            <div class="relative">
-              <input id="email" name="email" type="text" class="peer h-10 w-full border-b-2 border-gray-300 dark:bg-gray-800  text-gray-900 placeholder-transparent dark:text-gray-100  focus:outline-none focus:border-rose-600" placeholder="JohnDoe" />
+            
+              <div class="relative">
+              <input id="email" @bind="client.name" name="email" type="text" class="peer h-10 w-full border-b-2 border-gray-300 dark:bg-gray-800  text-gray-900 placeholder-transparent dark:text-gray-100  focus:outline-none focus:border-rose-600" placeholder="JohnDoe" />
               <label for="email" class="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600  peer-focus:text-sm">Nombre</label>
             </div>
 
             <div class="mt-10 relative">
-              <input id="lastName" type="text" name="password" class="peer h-10 w-full border-b-2 border-gray-300 dark:text-gray-100  dark:bg-gray-800  text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Password" />
+              <input id="lastName" type="text" @bind="client.lastName" name="password" class="peer h-10 w-full border-b-2 border-gray-300 dark:text-gray-100  dark:bg-gray-800  text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Password" />
               <label for="lastName" class="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Apellido</label>
             </div>
 
 
             <div class="mt-10 relative">
-              <input id="Email" type="email" name="password" class="peer h-10 w-full border-b-2 border-gray-300 dark:text-gray-100  dark:bg-gray-800  text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Email" />
+              <input @bind="client.email" id="Email" type="email" name="password" class="peer h-10 w-full border-b-2 border-gray-300 dark:text-gray-100  dark:bg-gray-800  text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Email" />
               <label for="Email" class="absolute left-0 dark:text-gray-100  -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Correo</label>
             </div>
 
-                        <div class="mt-10 relative">
+                  <div class="mt-10 relative">
               <input id="date" type="date" name="password" class="peer h-10 w-full border-b-2 border-gray-300  dark:bg-gray-800  text-gray-900 placeholder-transparent focus:outline-none text-black dark:text-gray-100 focus:border-rose-600" placeholder="Birth Day" />
-
             </div>
 
             <div class="mt-10 relative">
@@ -34,7 +43,7 @@
             </div>
 
             <div class="mt-10 relative">
-              <input id="Corfirm_Password" type="password" @bind="Confirm_password" class="peer h-10 w-full border-b-2 dark:text-gray-100  dark:bg-gray-800  border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Corfirm_Password" />
+              <input id="Corfirm_Password" type="password" @bind="confirPassword" class="peer h-10 w-full border-b-2 dark:text-gray-100  dark:bg-gray-800  border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600" placeholder="Corfirm_Password" />
               <label for="Corfirm_Password" class="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Confirmar contraseña</label>
             </div>
 
@@ -45,34 +54,77 @@
 
 
                     <a href="user/login" class="mt-4 block text-sm text-center font-medium text-gray-600 hover:underline focus:outline-none focus:ring-2 focus:ring-rose-500 dark:text-gray-100 ">¿Ya tienes una cuenta?</a>
-                    </div>
+            </div>
 
         </div>
       </div>
+      </EditForm>
+     
+
+@code{
+
+    //Contexto
+    private static MyDBContext myDBContext = new MyDBContext();
+
+    //servicios
+    private UserService userService = new UserService(myDBContext);
+    private ClientService clientService= new ClientService(myDBContext);
+    private CartService cartService = new CartService(myDBContext);
+
+    //Instancias
+    private User user     = new User();
+    private Client client = new Client();
+    private Orders order = new Orders();
+    private Cart cart = new Cart();
 
 
-      @code{
-public string Confirm_password { get; set; }
-public string password { get; set; }
+    //Variables
+    private string confirPassword;
+    private string password;
+    private string msg;
 
-bool Confpasswords_matches(string password, string confirm_password){
+    private async Task addUser()
+    {
 
-bool match = false;
-if( password == confirm_password){
-    return true;
+
+
+        //client
+
+
+        //user
+        user.username = client.email;
+        user.pwd = password;
+        user.clientId = "";
+
+        //Cart
+        cart.idClient = client.email;
+        cart.location = "Santo Domingo";
+        client.cartId = client.email;
+        if(client.name==null ) 
+        {
+
+            msg = "Hay campos vacios";
+        }
+        else
+        {
+            if (password==confirPassword)
+            {
+                try{
+                    await clientService.insertClient(client);
+                    await userService.insertUser(user);
+                    await cartService.insertCart(cart);
+                    NavigationManager.NavigateTo("/productlist");   
+                }catch(Exception e)
+                {
+                    throw e;
+                }
+            }
+            else
+            {
+                msg="Bad pass";
+            }
+
+        }
+    }
+
 }
-return match;
-}
-
-void addUser(){
-if(Confpasswords_matches(password,Confirm_password)){
-    Console.WriteLine("Password match");
-}else{
-    Console.WriteLine("Password not match");
-
-}
-
-}
-
-
-      }

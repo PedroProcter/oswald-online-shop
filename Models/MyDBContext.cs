@@ -14,7 +14,7 @@ namespace oswald_online_shop.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-            optionBuilder.UseSqlServer("");
+            optionBuilder.UseSqlServer("Data Source = SQL8001.site4now.net; Initial Catalog = db_a850d1_oswaldshoponline; User Id = db_a850d1_oswaldshoponline_admin; Password = oswaldshop01");
                 
          }
     }

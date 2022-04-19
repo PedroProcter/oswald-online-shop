@@ -1,23 +1,44 @@
 ﻿@page "/Admin/ProductList"
 @using oswald_online_shop.Data.AdminServices.ProductAdminServices
-      <div class="bg-gray-100 p-4">
+      <div class="bg-gray-100 p-4 border-t-2 border-gray-200 ">
         <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
       </div>
-          <div class="flex flex-wrap items-center justify-center">
-                   <a href="/productInsertEdit"> <button class="shadow-cla-blue rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 px-4 py-1 drop-shadow-md transition duration-300 hover:scale-105">Agregar nuevo producto</button></a>
+
+          <div class="flex items-center justify-center mt-10">
+                   <a href="/productInsertEdit" class=> 
+                   <button class="flex space-x-2 animate-shake shadow-lg rounded-lg bg-gradient-to-r from-cyan-400 to-green-400 px-4 py-3 drop-shadow-md transition duration-300 hover:scale-105"><span class="text-black text-xl font-semibold"> Agregar nuevo producto</span><svg class="fill-current h-6 text-white " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/></svg></button>
+                   </a>
             </div>
       <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 p-6">
 
 @if (productsAdmin==null)
 {
-      <div class="bg-gray-100 p-4">
-        <h1 class="text-center text-2xl font-semibold text-slate-800">NO se han agregado productos</h1>
+      <div class=" w-full col-span-1 sm:col-span-2 md:col-span-2 lg:col-span-3 xl:col-span-4 ">
+        <div class="relative w-1/2 bg-gray-100 p-4 border-t-2 border-gray-200 mx-auto rounded-lg ">
+          <h1 class="text-center  font-semibold text-slate-800 sm:text-lg md:text-2xl  ">No hay productos agregados</h1>
+          @* Right side*@          
+<span class="absolute w-16 transform -rotate-[20deg] top-[22px] -right-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+          <span class="absolute w-16 top-1/2 -right-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+          <span class="absolute w-16  transform rotate-[18deg] top-[42px]  -right-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+
+                    @* Left side*@          
+<span class="absolute w-16 transform rotate-[20deg] top-[22px] -left-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+          <span class="absolute w-16 top-1/2 -left-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+          <span class="absolute w-16  transform -rotate-[18deg] top-[42px]   -left-16 h-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md "></span>
+</div>
+
+
+
       </div>
 }else
 {
      
     @foreach(var product in productsAdmin)
     {
+    
+
+
+
         <div class="p-4 md:w-full">
           <div class="h-full overflow-hidden rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 shadow-xl hover:shadow-2xl transition duration-300">
             <img class="duration-400 w-full scale-110 object-cover object-center transition-all hover:scale-100 md:h-36 lg:h-48" src="@product.photoURL" alt="blog" />
@@ -53,8 +74,7 @@
         }
         catch (Exception e)
         {
-            throw e;
-        }
+throw e;        }
 
     }
 

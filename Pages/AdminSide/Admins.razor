@@ -3,6 +3,22 @@
 <PageTitle>Admins CPanel</PageTitle>
 
 <div class="w-full">
+
+     @if (@msg != "")
+            {
+                <div class="w-full  mx-auto relative top-1 flex justify-center">
+                    <div class="absolute w-1/4 bg-yellow-400 py-3 border-b-4 border-yellow-600 ">
+                    <div class="flex justify-center items-center">
+                                                <h1 class="text-center text-black font-semibold">@msg</h1>
+
+                                                <button @onclick="message" class="ml-5 bg-red-500 rounded-full w-5 hover:rotate-45 transition duration-500"><svg class="fill-current h-5 text-white hover:rotate-45 transition duration-500 "xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg></button>
+
+                    </div>
+
+                    </div>
+                </div>
+            }
+
       <div class="bg-white mx-auto rounded-2xl border shadow-x1 p-10 max-w-lg shadow-lg hover:shadow-2xl transition duration-300 mt-24 ">
         <div class="flex flex-col items-center space-y-4">
           <h1 class="font-bold text-2xl text-gray-700 w-4/6 text-center">
@@ -34,15 +50,22 @@
 @code {
     private string username;
     private string password;
-
+private string msg ="";
+void message(){
+    msg="";
+}
     private void Add()
     {
+      if(username==null || password==null || username=="" || password==""){
+        msg="No puedes dejar campos vacios";
+return;
+      }else{
         Admin newAdmin = new Admin();
         newAdmin.username = this.username;
         newAdmin.pwd = this.password;
         MyDBContext context = new MyDBContext();
         context.Admins.Add(newAdmin);
         context.SaveChanges();
-
+      }
     }
 }

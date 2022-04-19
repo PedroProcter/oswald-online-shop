@@ -1,4 +1,4 @@
-@page "/cart"
+@page "/user/cart"
 @layout CartLayout;
 
 @using oswald_online_shop.Data.ProductServices
@@ -6,12 +6,13 @@
 
         <div class="grid grid-cols-12 gap-14 selection:bg-yellow-300">
       
-      @if (products.Count() <= 0)
+      @if (products == null)
 {
+
      <div class="col-span-8">
             <div class="w-full">
 
-      <div class="ml-8 p-10 w-full shadow-2xl rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
+      <div class="ml-8 p-10 w-full shadow-lg rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
           <div class="basis-1/4">
           </div>
           <p class="text-3xl font-bold">No hay articulos en el carrito</p>
@@ -35,10 +36,7 @@
       
             </div>
           </div>
-
-
 }else{
-          <!--Primera seccion-->
           <div class="col-span-8">
             <div class="w-full">
                   @foreach(var product in products)
@@ -61,7 +59,6 @@
         
             </div>
           </div>
-      <!--Segunda seccion-->
           <div class="col-span-3 ">
             <div class="w-full">
               
@@ -80,7 +77,7 @@
 }
         </div>
 
-@code {
+
 
 
 @code {
@@ -89,9 +86,7 @@
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductService productServices = new ProductService(MydbContext);
     protected override async Task OnInitializedAsync()
-    {
-               //redirect NavManager.NavigateTo("/productlist");
-
+    {               //redirect NavManager.NavigateTo("/productlist");
         try
         {
             products = await productServices.getAllProducts();
@@ -106,4 +101,3 @@
 }
 
 
-}

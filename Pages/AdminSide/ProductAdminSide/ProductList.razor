@@ -1,13 +1,12 @@
 ﻿@page "/Admin/ProductList"
-@page "/Admin/ProductList/{categoryParameter}"
+@page "/Admin/ProductList/{category}"
+@layout Logged
 @using oswald_online_shop.Data.AdminServices.ProductAdminServices
-      <div class="bg-gray-100 p-4 border-t-2 border-gray-200 ">
-        <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
-      </div>
+
 
           <div class="flex items-center justify-center mt-10">
                    <a href="/productInsertEdit" class=> 
-                   <button class="flex space-x-2 animate-shake shadow-lg rounded-lg bg-gradient-to-r from-cyan-400 to-green-400 px-4 py-3 drop-shadow-md transition duration-300 hover:scale-105"><span class="text-black text-xl font-semibold"> Agregar nuevo producto</span><svg class="fill-current h-6 text-white " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/></svg></button>
+                   <button class="flex space-x-2 shadow-lg rounded-lg bg-gradient-to-r from-cyan-400 to-green-400 px-4 py-3 drop-shadow-md transition duration-300 hover:scale-105"><span class="text-black text-xl font-semibold"> Agregar nuevo producto</span><svg class="fill-current h-6 text-white " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/></svg></button>
                    </a>
             </div>
       <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4 p-6">
@@ -64,7 +63,7 @@
 
 @code {
     [Parameter]
-    public static string categoryParameter{ get; set; }
+public  string category {get;set;}
 
     public  static IEnumerable<Product> productsAdmin{ get; set; }
     public static MyDBContext MydbContext = new MyDBContext();
@@ -75,13 +74,13 @@
     {
         try
         {
-            if (categoryParameter==null)
+            if (category==null)
             {
                 productsAdmin = await productAdminServices.getAllProducts();
             }
             else
             {
-                productsAdmin = await productAdminServices.getProductsByCategory(categoryParameter);
+                productsAdmin = await productAdminServices.getProductsByCategory(category);
             }
 
             

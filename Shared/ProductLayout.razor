@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase
-
+@inject NavigationManager navigationManager 
 <PageTitle>slider</PageTitle>
 
 
@@ -8,7 +8,11 @@
        <div class="border-t-2 hidden md:block">
           <!--Side bar-->
           <div class="relative flex h-full flex-col border-r-2 border-gray-200 bg-white w-56">
-            <a href="ProductList" class="font-smibold text-2xl text-center pt-3">Categorias</a>
+            @{           
+              
+          string redire = "";  
+             <a @onclick="() => redirect(redire)" class="font-smibold text-2xl text-center pt-3 cursor-pointer">Categorias</a>}
+
             <!--Categoria de alimentos-->
             <div class="mt-2  group  w-full  py-4 hover:bg-gray-100 transition duration-500 rounded ">
               <div class="flex justify-center">
@@ -19,7 +23,10 @@
                 <!--Contenido de categorias-->
                 <ul class="">
                   <li>
-                    <a href="ProductList/Carnes">Carne</a> 
+                    @{
+                      string Carnes = "Carnes";
+                    <a href="ProductList/Carnes" @onclick="() => redirect(Carnes)" >Carne</a> 
+                    }
                     </li>
                   <li>Congelados</li>
                   <li>Galletas</li>
@@ -38,10 +45,17 @@
               </div>
               <div class=" transform -translate-x-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 absolute -right-[131px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
                 <!--Contenido de categorias-->
-                <ul class="">
+                <ul class="relative space-x-3 flex flex-col justify">
+                                                          @{
+                      string Fruta = "Fruta";
+                      string FrutaCongeladas = "FrutaCongeladas";
                   <li>
-                    <a href="ProductList/Fruta">Frutas</a> 
+
+                    <a class="cursor-pointer hover:text-red-500 hover:bg-gray-100 transition duration-500 w-full  text-center" @onclick="() => redirect(Fruta)">Frutas</a> 
+                                        
                     </li>
+ 
+                                                          }
                 </ul>
               </div>
             </div>
@@ -59,6 +73,20 @@
 
           </div>
         </div>
+
+        @code{
+
+          void redirect(string route){
+            if(route == ""){
+            navigationManager.NavigateTo($"ProductList", true);
+
+            }else{
+            navigationManager.NavigateTo($"ProductList/{route}", true);
+            }
+          }
+
+          }
+        }
 
         
   

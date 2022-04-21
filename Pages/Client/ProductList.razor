@@ -49,10 +49,12 @@ public  string category {get;set;}
             if (category==null)
             {
                 products = await productServices.getAllProducts();
+
             }
-            else
+            else if(category!=null)
             {
                 products = await productServices.getProductsByCategory(category);
+
             }
 
 

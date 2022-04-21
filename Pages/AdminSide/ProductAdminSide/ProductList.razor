@@ -1,4 +1,5 @@
 ﻿@page "/Admin/ProductList"
+@page "/Admin/ProductList/{categoryParameter}"
 @using oswald_online_shop.Data.AdminServices.ProductAdminServices
       <div class="bg-gray-100 p-4 border-t-2 border-gray-200 ">
         <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
@@ -62,15 +63,28 @@
 </div>
 
 @code {
+    [Parameter]
+    public static string categoryParameter{ get; set; }
 
     public  static IEnumerable<Product> productsAdmin{ get; set; }
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductAdminService productAdminServices = new ProductAdminService(MydbContext);
+    
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            productsAdmin = await productAdminServices.getAllProducts();
+            if (categoryParameter==null)
+            {
+                productsAdmin = await productAdminServices.getAllProducts();
+            }
+            else
+            {
+                productsAdmin = await productAdminServices.getProductsByCategory(categoryParameter);
+            }
+
+            
         }
         catch (Exception e)
         {

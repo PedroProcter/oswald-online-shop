@@ -43,6 +43,14 @@ namespace oswald_online_shop.Data.AdminServices.ProductAdminServices
                 return await updateProduct(product);
         }
 
+        public async Task<IEnumerable<Product>> getProductsByCategory(string category)
+        {
+            var query = _dbContext.Products
+                .Where(product => product.category == category)
+                .ToListAsync();
+            return await query;
+        }
+
         public async Task<bool> updateProduct(Product product)
         {
             _dbContext.Entry(product).State = EntityState.Modified;

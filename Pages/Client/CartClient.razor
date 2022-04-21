@@ -37,15 +37,15 @@
             </div>
           </div>
 }else{
-          <div class="col-span-8">
+          <div class="col-span-8 mb-10">
             <div class="w-full">
                   @foreach(var product in products)
     {
-      <div class="ml-8 p-10 w-full drop-shadow-m rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
+      <div class="ml-8  p-10 w-full border-b-2 border-gray-100 drop-shadow-m rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
             <input type="checkbox" class="self-center accent-pink-500 mr-6">
 
           <div class="w-1/4 mr-10 ">
-<img class="object-cover rounded" src="https://images.pexels.com/photos/2872755/pexels-photo-2872755.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="">
+<img class="object-cover rounded h-56 w-full" src="@product.photoURL" alt="">
 
           </div>
           <div class="basis-3/4">
@@ -67,6 +67,9 @@
 
           <div class="basis-3/4">
             <p class="font-semibold text-lg mb-2">Total a pagar</p>
+    
+            <h2 class="font-semibold text-lg mb-2">@sumaPrecio</h2>
+    
             <button class="bg-yellow-400 hover:bg-yellow-500 hover:transition-colors py-1 px-3 rounded-lg duration-500 mt-5 text-white">Proceder al pago</button>
           </div>
       </div>
@@ -83,10 +86,11 @@
 @code {
 
     public  static IEnumerable<Product> products{ get; set; }
+      public double sumaPrecio{ get; set; }
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductService productServices = new ProductService(MydbContext);
     protected override async Task OnInitializedAsync()
-    {               //redirect NavManager.NavigateTo("/productlist");
+    {           
         try
         {
             products = await productServices.getAllProducts();
@@ -97,6 +101,19 @@
         }
 
     }
+
+   protected override void OnInitialized(){
+
+     if(products == null){
+       Console.WriteLine("No hay articulos en el carrito");
+     }else{
+                                     foreach(var product in products){
+                                sumaPrecio += product.price;
+                              }
+     }
+
+
+   }
 
 }
 

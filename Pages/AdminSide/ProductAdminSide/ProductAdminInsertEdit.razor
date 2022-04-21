@@ -1,8 +1,10 @@
 ﻿@page "/productInsertEdit"
 @page "/productInsertEdit/{id:int}"
-@layout Simple;
+@layout Forms
 @using oswald_online_shop.Data.AdminServices.ProductAdminServices
 @inject NavigationManager NavigationManager
+ @using System.IO
+@inject IWebHostEnvironment env
 @if (product==null)
 {
     <spam>loanding..</spam>
@@ -42,7 +44,29 @@ else
       <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Categoría" @bind="product.category" />
 
       <input type="number" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Precio" @bind="product.price" />
-      <input type="text" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Imagen" @bind="product.photoURL" />
+            <label
+  class="
+    flex flex-col
+    items-center
+    px-4
+py-2
+    bg-indigo-50
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-purple-200 hover:text-black
+    text-purple-600
+    ease-linear
+    transition-all
+    duration-300
+  "
+>
+  <span class="mt-2 text-base leading-normal">Select a image</span>
+  <InputFile class="hidden" OnChange="OnInputFileChange"></InputFile>
+</label>
       <input type="text" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Cantidad" @bind="product.Stock" />
     </div>
     <div class="flex justify-center mt-10 space-x-4">
@@ -65,6 +89,10 @@ else
     [Parameter]
     public int id { get; set; }
     private string msg="";
+
+    long maxAllowedSize = 20000000;
+        IReadOnlyList<IBrowserFile> selectedFiles;
+
     private static MyDBContext myDBContext = new MyDBContext();
     private Product product = new Product();
     private ProductAdminService productAdminService= new ProductAdminService(myDBContext);
@@ -72,6 +100,43 @@ else
     {
         msg="";
     }
+private void OnInputFileChange(InputFileChangeEventArgs e)
+{
+    selectedFiles = e.GetMultipleFiles();
+    //Message = $"{selectedFiles.Count} file(s) selected";
+    this.StateHasChanged();
+    subir();
+}
+
+private async void subir()
+{
+    foreach (var file in selectedFiles)
+    {
+        Console.WriteLine(file.Size);
+        if(file.Size > maxAllowedSize)
+        {
+            //Message = $"File {file.Name} is too big";
+            Console.WriteLine(file.Size);
+            this.StateHasChanged();
+            return;
+        }
+        else
+        {
+        using(Stream stream = file.OpenReadStream(maxAllowedSize)){
+        var  ruta= env.WebRootPath+"/img"+"/"+file.Name;
+        FileStream fs = File.Create(ruta);
+        await stream.CopyToAsync(fs);
+        stream.Close();
+        fs.Close();
+        product.photoURL = "img/"+file.Name;
+        }
+        }
+
+
+    }
+    this.StateHasChanged();
+}
+
     protected override async Task OnInitializedAsync()
     {
         try

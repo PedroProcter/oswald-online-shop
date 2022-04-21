@@ -25,6 +25,15 @@ namespace oswald_online_shop.Data.ProductServices
             return await _dbContext.Products.ToListAsync();
         }
 
+        public async Task<IEnumerable<Product>> getProductsByCategory(string category)
+        {
+            var query = _dbContext.Products
+                .Where(product => product.category == category)
+                .ToListAsync();
+            return await query;
+        }
+
+
         public async Task<Product> getProduct(int id)
         {
             return  await _dbContext.Products.FindAsync(id);

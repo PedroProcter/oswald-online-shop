@@ -1,3 +1,6 @@
+@inject NavigationManager navigationManager 
+@inject AuthenticationStateProvider authStateProvider
+        
         <nav class="flex justify-between bg-white py-4 px-5">
           <!--icon-->
           <a href="/ProductList" class="flex space-x-2">
@@ -11,7 +14,8 @@
       <svg class="h-5 self-center" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M96 0C107.5 0 117.4 8.19 119.6 19.51L121.1 32H541.8C562.1 32 578.3 52.25 572.6 72.66L518.6 264.7C514.7 278.5 502.1 288 487.8 288H170.7L179.9 336H488C501.3 336 512 346.7 512 360C512 373.3 501.3 384 488 384H159.1C148.5 384 138.6 375.8 136.4 364.5L76.14 48H24C10.75 48 0 37.25 0 24C0 10.75 10.75 0 24 0H96zM128 464C128 437.5 149.5 416 176 416C202.5 416 224 437.5 224 464C224 490.5 202.5 512 176 512C149.5 512 128 490.5 128 464zM512 464C512 490.5 490.5 512 464 512C437.5 512 416 490.5 416 464C416 437.5 437.5 416 464 416C490.5 416 512 437.5 512 464z"/></svg>
       </a>
           <div class="hidden md:flex items-center space-x-10">
-            <a href="user/login" class="border-2 py-2 px-2 rounded-xl border-transparent bg-red-500 text-lg transition duration-500 hover:bg-red-400 transition duration-300 font-semibold text-base hover:border-rose-600 text-white ">Cerrar sesion</a>
+            <a @onclick="Logout" class="border-2 py-2 px-2 rounded-xl border-transparent bg-red-500 text-lg transition duration-500 hover:bg-red-400 transition duration-300 font-semibold text-base hover:border-rose-600 text-white ">Cerrar sesion</a>
+
 
   <a  href="https://docs.microsoft.com/aspnet/" class="self-center mt-[4px] bg-white rounded-full w-7" target="_blank"><svg class="h-8 fill-current " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S224 177.7 224 160C224 142.3 238.3 128 256 128zM296 384h-80C202.8 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h32c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"/></svg></a>
           </div>
@@ -42,4 +46,12 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+
+    private async void Logout(){
+              var auth = (Authen)authStateProvider;
+              await auth.UpdateAuthenticationState(null);
+              navigationManager.NavigateTo("/", true);
+    }
+
 }

@@ -1,5 +1,16 @@
 ﻿@page "/"
+@inject IJSRuntime js
+
 <div class="mt-10  max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-7xl mx-auto"> 
+
+@* <AuthorizeView>
+
+
+
+<NotAuthorized>
+    </NotAuthorized>
+
+</AuthorizeView> *@
 
 <MudCarousel Class="mud-width-full rounded-md shadow-2xl shadow-black" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
     <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
@@ -19,11 +30,19 @@
     </MudCarouselItem>
 </MudCarousel>
 
-
 </div>
 @code{ 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
     private bool arrows = true;
     private bool bullets = true;
     private bool autocycle = true;
     private Transition transition = Transition.Slide;
+
+private async Task DisplayGreetingAlert(){
+    var authState = await authenticationState;
+    var message =$"hello{authState.User.Identity.Name}";
+    await js.InvokeVoidAsync("alert", message);
+}
+
 }

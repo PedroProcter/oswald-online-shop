@@ -1,7 +1,11 @@
 ﻿@page "/ProductList"
 @page "/ProductList/{category}"
 @layout ProductLayout;
+@attribute [Authorize(Roles = "Administrator,user")]
 @using oswald_online_shop.Data.ProductServices
+
+
+
       <div class="bg-gray-100 p-4">
         <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
       </div>
@@ -34,7 +38,6 @@
     }
 }
 </div>
-
 @code {
       [Parameter]
 public  string category {get;set;}
@@ -51,7 +54,7 @@ public  string category {get;set;}
                 products = await productServices.getAllProducts();
 
             }
-            else if(category!=null)
+            else
             {
                 products = await productServices.getProductsByCategory(category);
 

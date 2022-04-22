@@ -1,9 +1,11 @@
 @inherits LayoutComponentBase
 @inject NavigationManager navigationManager 
+@inject AuthenticationStateProvider authStateProvider
 <PageTitle>slider</PageTitle>
 
 
         <UserLoged/>
+
    <div class="flex h-screen">
        <div class="border-t-2 hidden md:block">
           <!--Side bar-->
@@ -89,4 +91,11 @@
         }
 
         
-  
+  @code{
+
+    private async void Logout(){
+              var auth = (Authen)authStateProvider;
+              await auth.UpdateAuthenticationState(null);
+              navigationManager.NavigateTo("/", true);
+    }
+  }

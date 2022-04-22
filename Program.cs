@@ -3,14 +3,21 @@ using Microsoft.AspNetCore.Components.Web;
 using oswald_online_shop.Data;
 using MudBlazor.Services;
 using oswald_online_shop.Data.ProductServices;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddAuthenticationCore();
 builder.Services.AddMemoryCache();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
+builder.Services.AddOptions();
+builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddScoped<AuthenticationStateProvider,Authen >();
+builder.Services.AddAuthorizationCore();
 builder.Services.AddSingleton<WeatherForecastService>();
 
 

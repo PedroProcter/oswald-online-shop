@@ -1,0 +1,41 @@
+@page "/login"
+@using oswald_online_shop.Data
+@inject IJSRuntime js
+@inject UserAccountService UserAccountService
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+<h3>Login</h3>
+@code {
+
+    private class Model
+    {
+
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    private Model model = new Model();
+
+    private async Task auth()
+    {
+        var userAccount = UserAccountService.GetByUserName(model.Username);
+        if (userAccount == null || userAccount.Password != model.Password)
+        {
+            await js.InvokeVoidAsync("alert", "Invalid username or password");
+            return;
+        }
+
+        var auth = (Authen)authStateProvider;
+        await auth.UpdateAuthenticationState(new UserSession{
+        UserName = userAccount.UserName,
+        Role = userAccount.Role
+        });
+        navManager.NavigateTo("/",true);
+
+
+
+    }
+
+}
+
+}

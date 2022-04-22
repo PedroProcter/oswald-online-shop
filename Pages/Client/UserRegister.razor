@@ -1,8 +1,32 @@
 @page "/user/register"
 @layout Simple;
 @inject NavigationManager NavigationManager
+@using oswald_online_shop.Data
+@inject AuthenticationStateProvider authStateProvider
 
-<EditForm Model="client">
+
+<AuthorizeView>
+
+
+
+<Authorized>
+
+<div class="min-h-screen flex flex-col mt-26 items-center space-y-4" >
+<h3 class="text-2xl font-normal text-red-400">Ya estas autoriazdo para accerder a esta ruta </h3>
+
+<div class="relative inset-x-0 flex justify-center group">
+    <span class="absolute  bg-indigo-500 w-36 rounded-lg transform translate-x-9 translate-y-6 h-12 transition duration-500 group-hover:translate-y-0 group-hover:translate-x-0"></span>
+
+  <span class="absolute  bg-black w-44 rounded-lg group-hover:translate-x-0 transform translate-x-3 translate-y-3.5 group-hover:translate-y-0 h-12 transition duration-500"></span>
+
+<a class="relative text-blue-300 w-44 text-center rounded-lg text-xl cursor-pointer bg-white shadow-xl px-3 py-3 group-hover:bg-slate-800 group-hover:text-white transition duration-500 font-semibold" href="/productlist ">Volver al inicio</a>
+</div>
+</div>
+    </Authorized>
+
+
+<NotAuthorized>
+<div>
     @if (@msg != "")
             {
                 <div class="w-full  mx-auto relative top-1 flex justify-center ">
@@ -66,7 +90,13 @@
 
         </div>
       </div>
-      </EditForm>
+      </div>
+    </NotAuthorized>
+
+</AuthorizeView>
+
+
+
      
 
 @code{
@@ -91,6 +121,8 @@
 void message(){
   msg = "";
 }
+
+
     private async Task addUser()
     {
         //client

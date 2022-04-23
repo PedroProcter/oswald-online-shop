@@ -1,0 +1,75 @@
+﻿@page "/Admin/Slider"
+@page "/Admin/Slider/{id:int}"
+@inject NavigationManager NavigationManager
+@layout Forms
+
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
+
+@if (slider == null)
+{
+
+}
+else
+{
+    <EditForm Model="slider">
+
+
+    <div>
+        <label>Insertar url de la imagen</label>
+        <input @bind="slider.url"/>
+    </div>
+    
+    <button @onclick="saveSliderImage">Guardar</button>
+    <a href="/Admin/SliderList"><button >Cancelar</button></a>
+
+
+
+
+
+</EditForm>
+
+
+}
+
+@code {
+    [Parameter]
+    public int id{ get; set; }
+
+
+    private SliderOswald slider = new SliderOswald();
+    private static MyDBContext myDBContext = new MyDBContext();
+    private static SliderAdminService sliderAdminServices = new SliderAdminService  (myDBContext);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            slider = await sliderAdminServices.getOnlySliderImage(id);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+
+
+    public async Task saveSliderImage()
+    {
+        try
+        {
+            await sliderAdminServices.saveSliderImage(slider);
+            NavigationManager.NavigateTo("/Admin/sliderlist");
+
+        }
+        catch(Exception e)
+        {
+            throw e;
+
+
+        }
+
+    }
+
+
+
+}

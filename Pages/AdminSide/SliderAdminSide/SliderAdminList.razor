@@ -1,0 +1,39 @@
+﻿@page "/Admin/SliderList"
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
+@layout Forms
+
+@if (sliders == null)
+{
+
+}
+else
+{
+
+
+@foreach(var sliderImage in sliders)
+{
+   <img src="@sliderImage.url" />
+   <a href="/Admin/Slider/@sliderImage.id">Editar</a>
+   <a href="/Admin/Delete/@sliderImage.id">Eliminar</a>
+}
+}
+
+@code {
+
+
+
+    public IEnumerable<SliderOswald> sliders{ get; set; }
+    private static MyDBContext myDBContext = new MyDBContext();
+    public SliderAdminService sliderAdminService = new SliderAdminService(myDBContext); 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            sliders = await sliderAdminService.getAllSliderImage();
+        }catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+}

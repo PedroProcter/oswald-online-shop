@@ -1,0 +1,51 @@
+﻿@page "/Admin/Delete/{id:int}"
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
+@inject NavigationManager NavigationManager
+@layout Forms
+
+@if (sliderImage == null)
+{
+
+}
+else
+{
+<EditForm Model="sliderImage">
+
+    
+    <div>
+        <label>Insertar url de la imagen</label>
+        <input @bind="sliderImage.url"/>
+    </div>
+    
+    <button @onclick="deleteSliderImage">Eliminar</button>
+    <a href="/Admin/SliderList"><button >Cancelar</button></a>
+
+</EditForm>
+
+}
+
+
+@code {
+    [Parameter]
+    public int id{ get; set; }
+    private SliderOswald sliderImage = new SliderOswald();
+    private static MyDBContext myDBContext = new MyDBContext();
+
+    private SliderAdminService sliderAdminService = new SliderAdminService(myDBContext);
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        sliderImage = await sliderAdminService.getOnlySliderImage(id);
+    }
+
+
+
+    private async Task deleteSliderImage()
+    {
+        await sliderAdminService.deleteSliderImage(id);
+        NavigationManager.NavigateTo("/Admin/SliderList");
+    }
+}

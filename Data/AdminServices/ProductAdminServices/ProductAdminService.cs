@@ -14,7 +14,7 @@ namespace oswald_online_shop.Data.AdminServices.ProductAdminServices
 
         public async Task<bool> deleteProduct(int id)
         {
-            var product = await _dbContext.Products.FindAsync(id);
+            var product = await  _dbContext.Products.FindAsync(id);
             _dbContext.Products.Remove(product);
             return await _dbContext.SaveChangesAsync() > 0;
         }

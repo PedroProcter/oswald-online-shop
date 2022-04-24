@@ -1,24 +1,30 @@
 ﻿@page "/"
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
+
 <div class="mt-10  max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-7xl mx-auto"> 
 
-<MudCarousel Class="mud-width-full rounded-md shadow-2xl shadow-black" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
-    <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
-        <div class="d-flex" style="height:100%">
-                          <img class="w-full object-cover" src="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="shop">
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition" Color="@Color.Secondary">
-        <div class="d-flex" style="height:100%">
-                          <img class="w-full object-cover" src="https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="shop">
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition">
-        <div class="d-flex" style="height:100%">
-     <video class="w-full h-full object-cover" autoplay loop muted  src="video/Vegetable Stand - 151.mp4 "></video>
-        </div>
-    </MudCarouselItem>
-</MudCarousel>
+@if(sliders == null){
 
+}else{
+<MudCarousel Class="mud-width-full rounded-md shadow-2xl shadow-black" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+    @foreach(var sliderImage in sliders)
+{
+
+    <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
+
+        <div class="d-flex" style="height:100%">
+                @if(sliderImage.url.Contains("mp4")){
+<video class="w-full h-full object-cover" autoplay loop muted  src="@sliderImage.url"></video>
+    }else{
+                                  <img class="w-full object-cover" src="@sliderImage.url" alt="shop">
+    }
+
+        </div>
+    </MudCarouselItem>
+}
+
+</MudCarousel>
+}
 
 </div>
 @code{ 
@@ -26,4 +32,20 @@
     private bool bullets = true;
     private bool autocycle = true;
     private Transition transition = Transition.Slide;
+
+        public IEnumerable<SliderOswald> sliders{ get; set; }
+    private static MyDBContext myDBContext = new MyDBContext();
+    public SliderAdminService sliderAdminService = new SliderAdminService(myDBContext); 
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            sliders = await sliderAdminService.getAllSliderImage();
+        }catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
 }

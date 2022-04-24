@@ -41,7 +41,12 @@ else
     <div class="space-y-5">
       <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Nombre" @bind="product.name" />
 
-      <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Categoría" @bind="product.category" />
+<select @bind="product.category" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none">
+<option value="">Categorias</option>
+<option value="Frutas">Fruta</option>
+<option value="Carnes">Carnes</option>
+
+</select>
 
       <input type="number" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Precio" @bind="product.price" />
             <label
@@ -122,13 +127,16 @@ private async void subir()
         }
         else
         {
+        string [] rutas = {env.WebRootPath, "images", file.Name};
+        string nuevo= String.Join("/",rutas);
         using(Stream stream = file.OpenReadStream(maxAllowedSize)){
-        var  ruta= env.WebRootPath+"/img"+"/"+file.Name;
-        FileStream fs = File.Create(ruta);
+            var ruta ="/img/";
+        var path = $"{env.WebRootPath}{ruta}{file.Name}";
+        FileStream fs = File.Create(nuevo);
         await stream.CopyToAsync(fs);
         stream.Close();
         fs.Close();
-        product.photoURL = "img/"+file.Name;
+        product.photoURL = "images/"+file.Name;
         }
         }
 

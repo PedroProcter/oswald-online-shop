@@ -13,7 +13,11 @@
 </AuthorizeView> *@
 
 <MudCarousel Class="mud-width-full rounded-md shadow-2xl shadow-black" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+    @foreach(var sliderImage in sliders)
+{
+
     <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
+
         <div class="d-flex" style="height:100%">
                           <img class="w-full object-cover" src="img/supermarket-4052658.jpg" alt="shop">
         </div>
@@ -28,7 +32,7 @@
      <video class="w-full h-full object-cover" autoplay loop muted  src="video/Shop - 47601.mp4 "></video>
         </div>
     </MudCarouselItem>
-</MudCarousel>
+}
 
 </div>
 @code{ 

@@ -1,0 +1,186 @@
+﻿@page "/productInsertEdit"
+@page "/productInsertEdit/{id:int}"
+@layout Forms
+@using oswald_online_shop.Data.AdminServices.ProductAdminServices
+@inject NavigationManager NavigationManager
+ @using System.IO
+@inject IWebHostEnvironment env
+@if (product==null)
+{
+    <spam>loanding..</spam>
+}
+else
+{
+     @if (@msg != "")
+            {
+                <div class="w-full  mx-auto relative top-1 flex justify-center">
+                    <div class="absolute w-1/4 bg-yellow-400 py-3 border-b-4 border-yellow-600 ">
+                    <div class="flex justify-center items-center">
+                                                <h1 class="text-center text-black font-semibold">@msg</h1>
+
+                                                <button @onclick="message" class="ml-5 bg-red-500 rounded-full w-5 hover:rotate-45 transition duration-500"><svg class="fill-current h-5 text-white hover:rotate-45 transition duration-500 "xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg></button>
+
+                    </div>
+
+                    </div>
+                </div>
+            }
+               <div class="w-full flex justify-center mt-16">
+  <div class=" max-w-sm rounded-xl bg-white px-10 py-8 shadow-lg hover:shadow-2xl transition duration-300 caret-pink-500">
+    <div class="flex flex-col mb-10 items-center space-y-4">
+    @if(id <= 0){
+            <h1 class="text-center text-2xl font-bold">Agregar nuevo producto</h1>
+
+    <img class="object-cover w-14 " src="https://cdn-icons-png.flaticon.com/512/4290/4290854.png" alt="">
+    }else{
+            <h1 class="text-center text-2xl font-bold">Editar producto</h1>
+    <img class="object-cover w-16 " src="https://cdn-icons.flaticon.com/png/512/4248/premium/4248450.png?token=exp=1650370146~hmac=0d6b72952eb195769b8c6cf5fd69baed" alt="">
+    }
+
+</div>
+    <div class="space-y-5">
+      <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Nombre" @bind="product.name" />
+
+<select @bind="product.category" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none">
+<option value="">Categorias</option>
+<option value="Frutas">Fruta</option>
+<option value="Carnes">Carnes</option>
+
+</select>
+
+      <input type="number" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Precio" @bind="product.price" />
+            <label
+  class="
+    flex flex-col
+    items-center
+    px-4
+py-2
+    bg-indigo-50
+    rounded-md
+    shadow-md
+    tracking-wide
+    uppercase
+    border border-blue
+    cursor-pointer
+    hover:bg-purple-200 hover:text-black
+    text-purple-600
+    ease-linear
+    transition-all
+    duration-300
+  "
+>
+  <span class="mt-2 text-base leading-normal">Select a image</span>
+  <InputFile class="hidden" OnChange="OnInputFileChange"></InputFile>
+</label>
+      <input type="text" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Cantidad" @bind="product.Stock" />
+    </div>
+    <div class="flex justify-center mt-10 space-x-4">
+      <a href="/Admin/ProductList" class="bg-rose-400 px-3 py-1 font-semibold rounded  text-slate-100 border-b-4 border-rose-600 hover:bg-rose-200 hover:text-black transition-colors duration-300">Cancelar</a>
+
+@if(id <= 0){
+                  <a @onclick="saveProduct" class="cursor-pointer bg-sky-400 px-3 py-1 font-semibold rounded  text-slate-100 border-b-4 border-sky-600 hover:bg-sky-200 hover:text-black transition-colors duration-300">Agregar</a>
+}else{
+              <a @onclick="saveProduct" class="cursor-pointer bg-green-400 px-3 py-1 font-semibold rounded  text-slate-100 border-b-4 border-green-600 hover:bg-green-200 hover:text-black transition-colors duration-300">Editar</a>
+}
+
+    </div>
+  </div>
+  </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private string msg="";
+
+    long maxAllowedSize = 20000000;
+        IReadOnlyList<IBrowserFile> selectedFiles;
+
+    private static MyDBContext myDBContext = new MyDBContext();
+    private Product product = new Product();
+    private ProductAdminService productAdminService= new ProductAdminService(myDBContext);
+    void message()
+    {
+        msg="";
+    }
+private void OnInputFileChange(InputFileChangeEventArgs e)
+{
+    selectedFiles = e.GetMultipleFiles();
+    //Message = $"{selectedFiles.Count} file(s) selected";
+    this.StateHasChanged();
+    subir();
+}
+
+private async void subir()
+{
+    foreach (var file in selectedFiles)
+    {
+        Console.WriteLine(file.Size);
+        if(file.Size > maxAllowedSize)
+        {
+            //Message = $"File {file.Name} is too big";
+            Console.WriteLine(file.Size);
+            this.StateHasChanged();
+            return;
+        }
+        else
+        {
+        string [] rutas = {env.WebRootPath, "images", file.Name};
+        string nuevo= String.Join("/",rutas);
+        using(Stream stream = file.OpenReadStream(maxAllowedSize)){
+            var ruta ="/img/";
+        var path = $"{env.WebRootPath}{ruta}{file.Name}";
+        FileStream fs = File.Create(nuevo);
+        await stream.CopyToAsync(fs);
+        stream.Close();
+        fs.Close();
+        product.photoURL = "images/"+file.Name;
+        }
+        }
+
+
+    }
+    this.StateHasChanged();
+}
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (id != 0)
+            {
+                product = await productAdminService.getProduct(id);
+            }
+
+        }catch(Exception e)
+        {
+            throw e;
+        }     
+    }
+    protected async Task saveProduct()
+    {
+        if (product.name==null || product.category==null ||product.price==0|| product.photoURL==null)
+        {
+            msg = "No pueden haber campos nulos";
+        }
+        else
+        {
+            try
+            {
+                await productAdminService.saveProduct(product);
+                NavigationManager.NavigateTo("/Admin/ProductList");
+            }catch(Exception e)
+            {
+                msg = "Hubo un error";
+                
+                throw e;
+            }
+        }
+    }
+
+
+
+
+}

@@ -1,0 +1,62 @@
+﻿@page "/Admin/SliderList"
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
+@layout Forms
+<div class="mt-3 mb-5 max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-6xl mx-auto"> 
+
+<div class="flex flex-col items-center">
+<h1 class="text-3xl text-black font-semibold">Editar slider</h1>
+    <img class="h-16" src="images/slider.png"/>
+    <a href="Admin/Slider"><button class="bg-teal-400 px-3 py-2 border-2 border-transparent hover:border-white rounded hover:bg-teal-600 hover:text-white transition duration-500">Agregar Imagen o Video</button></a>
+</div>
+@if (sliders == null)
+{
+
+}
+else
+{
+
+<MudCarousel Class="mud-width-full rounded-md shadow-2xl relative shadow-black mt-10" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
+    @foreach(var sliderImage in sliders)
+{
+    <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
+        <div class="absolute inset-x-0 top-1 flex justify-center justify-between space-x-5">
+   <a href="/Admin/Delete/@sliderImage.id" class="text-2xl text-rose-100 rounded-lg border-2 border-transparent hover:border-white hover:bg-red-300 hover:text-black transition duration-500 px-3 py-3 bg-red-500 shadow-2xl shadow-red-500">Eliminar</a>  <a href="/Admin/Slider/@sliderImage.id" class=" text-2xl text-yellow-100 rounded-lg border-2 border-transparent hover:border-white hover:bg-yellow-300 hover:text-black transition duration-500 px-3 py-3 bg-yellow-500 shadow-2xl shadow-yellow-500">Editar</a>
+   </div>
+
+        <div class="d-flex" style="height:100%">
+                @if(sliderImage.url.Contains("mp4")){
+<video class="absolute -z-10 w-full h-full object-cover" autoplay loop muted  src="@sliderImage.url"></video>
+    }else{
+                                  <img class="w-full object-cover" src="@sliderImage.url" alt="shop">
+    }
+
+        </div>
+    </MudCarouselItem>
+}
+
+</MudCarousel>
+
+}
+</div>
+@code {
+    private bool arrows = true;
+    private bool bullets = true;
+    private bool autocycle = true;
+    private Transition transition = Transition.Slide;
+
+
+    public IEnumerable<SliderOswald> sliders{ get; set; }
+    private static MyDBContext myDBContext = new MyDBContext();
+    public SliderAdminService sliderAdminService = new SliderAdminService(myDBContext); 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            sliders = await sliderAdminService.getAllSliderImage();
+        }catch(Exception e)
+        {
+            throw e;
+        }
+    }
+
+}

@@ -1,0 +1,71 @@
+﻿@page "/productdelete/{id:int}"
+@layout Forms
+@using oswald_online_shop.Data.AdminServices.ProductAdminServices
+@inject NavigationManager NavigationManager
+@if (product==null)
+{
+    <spam>loanding..</spam>
+}
+else
+{
+
+<div class="w-full flex justify-center mt-16">
+  <div class=" max-w-sm rounded-xl bg-white px-10 py-8 shadow-lg hover:shadow-2xl transition duration-300 caret-pink-500">
+    <div class="flex flex-col mb-10 items-center space-y-4">
+
+            <h1 class="text-center text-2xl font-bold">Borrar producto</h1>
+    <img class="object-cover w-16 " src="https://cdn-icons.flaticon.com/png/512/5952/premium/5952781.png?token=exp=1650371027~hmac=f0f57d303b061fa671def4ad4c575e50" alt="">
+    
+
+</div>
+    <div class="space-y-5">
+      <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Nombre" @bind="product.name" />
+
+      <input class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Categoría" @bind="product.category" />
+
+      <input type="number" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Precio" @bind="product.price" />
+      <input type="text" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Imagen" @bind="product.photoURL" />
+      <input type="text" class="w-full caret-pink-500 rounded-md bg-indigo-50 py-2 px-4 text-slate-800 placeholder-gray-500 outline-none" placeholder="Cantidad" @bind="product.Stock" />
+    </div>
+    <div class="flex justify-center mt-10 space-x-4">
+      <a href="/Admin/ProductList" class="bg-indigo-400 px-3 py-1 font-semibold rounded  text-slate-100 border-b-4 border-indigo-600 hover:bg-indigo-200 hover:text-black transition-colors duration-300">Cancelar</a>
+
+                  <a @onclick="deleteProduct" class="cursor-pointer bg-red-400 px-3 py-1 font-semibold rounded  text-slate-100 border-b-4 border-red-600 hover:bg-red-200 hover:text-black transition-colors duration-300">Borrar</a>
+
+
+    </div>
+  </div>
+  </div>
+
+
+
+    
+}
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    private static MyDBContext myDBContext = new MyDBContext();
+    private Product product = new Product();
+    private ProductAdminService productAdminService= new ProductAdminService(myDBContext);
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+        product = await productAdminService.getProduct(id);
+        }catch(Exception e){
+           throw e;
+        }
+    }
+    protected async Task deleteProduct()
+    {
+        await productAdminService.deleteProduct(id);
+        NavigationManager.NavigateTo("/Admin/ProductList");
+    }
+
+
+
+
+}

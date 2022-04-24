@@ -155,6 +155,22 @@ namespace oswald_online_shop.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("oswald_online_shop.Models.SliderOswald", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Slider");
+                });
+
             modelBuilder.Entity("oswald_online_shop.Models.User", b =>
                 {
                     b.Property<int>("id")

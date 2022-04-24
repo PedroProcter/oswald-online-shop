@@ -10,6 +10,7 @@ namespace oswald_online_shop.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Orders> Orders { get; set; }
+        public DbSet<SliderOswald> Slider { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)

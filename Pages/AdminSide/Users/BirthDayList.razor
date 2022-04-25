@@ -1,0 +1,199 @@
+@page "/Admin/birthdaylist"
+@attribute [Authorize(Roles = "admin")]
+@layout Logged
+@using System.IO
+@using  SpreadsheetLight
+@inject IWebHostEnvironment env
+@using  ClosedXML.Excel 
+@inject IJSRuntime js
+
+
+
+
+<div class="w-10/12 md:w-7/12 lg:6/12 mx-auto relative py-20">
+
+      <h1 class="text-3xl text-center font-bold text-blue-500">Listado de cumpleaños</h1>
+        	<div class="m-4 flex justify-center">
+<select  class="rounded-l-lg p-4 border-t mr-0 border-b border-l text-gray-800 border-gray-200 bg-white" @bind="month">
+<option value="0">Mes</option>
+<option value="1">Enero</option>
+<option value="2">Febrero</option>
+<option value="3">Marzo</option>
+<option value="4">Abril</option>
+<option value="5">Mayo</option>
+<option value="6">Junio</option>
+<option value="7">Julio</option>
+<option value="8">Agosto</option>
+<option value="9">Septiembre</option>
+<option value="10">Octubre</option>
+<option value="11">Noviembre</option>
+<option value="12">Diciembre</option>
+</select>
+		<button class="px-8 rounded-r-lg bg-yellow-400  text-gray-800 font-bold p-4 uppercase border-yellow-500 border-t border-b border-r" @onclick="filtro">Buscar</button>
+	</div>
+      <div class="border-l-2 mt-10">
+@foreach(var clientes in client){
+        <div class="transform transition cursor-pointer hover:-translate-y-2 ml-10 relative flex items-center px-6 py-4 bg-pink-600 text-white rounded mb-10 flex-col md:flex-row space-y-4 md:space-y-0">
+          <div class="w-5 h-5 bg-pink-600 absolute -left-10 transform -translate-x-2/4 rounded-full z-10 mt-2 md:mt-0"></div>
+
+          <div class="w-10 h-1 bg-pink-300 absolute -left-10 z-0"></div>
+
+          <div class="flex-auto"><h1 class="text-xl font-bold">@clientes.name &nbsp; @clientes.lastName</h1>
+
+            <h1 class="text-lg">@mes(clientes.birthDay)</h1>
+          </div>
+          <button    class="text-center text-white hover:text-gray-300 @disabel"  @onclick="() => SavedownLoad(clientes.id)" >Descargar</button>
+
+        </div>
+}
+      </div>
+    </div>
+
+    @code{
+        IList<Client> client;
+           public string disabel = "";
+            private  int month {get; set;}
+            private  int usuario {get; set;}
+        protected override async Task OnInitializedAsync(){
+
+            using(var db = new MyDBContext()){
+            client =  db.Clients.ToList();
+            foreach(var i in client){
+            DateTime  fechaUsuario = Convert.ToDateTime(i.birthDay);
+            DateTime Nac = fechaUsuario.Date; 
+                Console.WriteLine(Nac);
+            }
+            }
+        }
+
+        void filtro(){
+            if(month == 0 || month == null){
+                client =  new MyDBContext().Clients.ToList();
+                return;
+            }else{
+            using(var db = new MyDBContext()){
+            client =  db.Clients.Where(s => s.birthDay.Month == Convert.ToInt32(month)).ToList();
+            Console.WriteLine("fecha");
+
+            }
+            }
+        }
+
+public async Task SavedownLoad(int id) {
+    await excel(id);
+        var url = env.WebRootPath;
+        var fileURL = "Listado.xlsx";
+        var fileName = "Listado.xlsx";
+        await js.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
+    
+}
+       public async Task excel(int ID){
+            try{
+            
+                if(ID == 0 || ID ==null){
+                    Console.WriteLine(ID);
+                    return;
+                }else{
+                  var woorbook = new XLWorkbook();
+  var worksheet = woorbook.Worksheets.Add("Listado");
+      worksheet.Cell(1,1).Value = "Nombre";
+    worksheet.Cell(1,2).Value = "Apellido";
+    worksheet.Cell(1,3).Value = "Correo";
+                            using(var db = new MyDBContext()){
+            IList<Client> clientes =  db.Clients.Where(s => s.id == ID).ToList();
+            List<string> _datosUsuario;
+    foreach(var cliente in clientes){
+    worksheet.Cell(2,1).Value = cliente.name;
+    worksheet.Cell(2,2).Value = cliente.lastName;
+    worksheet.Cell(2,3).Value = cliente.email;
+    }
+    woorbook.SaveAs($"{env.WebRootPath}/Listado.xlsx");
+            }
+                }
+            }catch(Exception ex){
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+string mes(dynamic fecha){
+            DateTime  fechaUsuario = Convert.ToDateTime(fecha);
+            DateTime Nac = fechaUsuario.Date; 
+int mes = Nac.Month;
+string meses ="";       
+ switch (mes)
+        {
+            case 1:
+                meses = "Enero";
+                break;
+
+            case 2:
+                meses = "Febrero";
+                break;
+
+
+            case 3:
+                meses = "Marzo";
+                break;
+
+
+
+            case 4:
+                meses = "Abril";
+                break;
+
+
+            case 5:
+                meses = "Mayo";
+                break;
+
+
+
+            case 6:
+                meses = "Junio";
+                break;
+
+
+
+            case 7:
+                meses = "Julio";
+                break;
+
+
+
+            case 8:
+                meses = "Agosto";
+                break;
+
+
+
+            case 9:
+                meses = "Septiembre";
+                break;
+
+
+
+            case 10:
+                meses = "Octubre";
+                break;
+
+
+
+            case 11:
+                meses = "Noviembre";
+                break;
+
+
+
+            case 12:
+                meses = "Diciembre";
+                break;
+
+
+        }
+
+return Convert.ToString(Nac.Day)+" de "+meses+" del "+Convert.ToString(Nac.Year);
+            
+}
+
+
+    }

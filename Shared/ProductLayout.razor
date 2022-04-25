@@ -16,23 +16,31 @@
              <a @onclick="() => redirect(redire)" class="font-smibold text-2xl text-center pt-3 cursor-pointer">Categorias</a>}
 
             <!--Categoria de alimentos-->
-            <div class="mt-2  group  w-full  py-4 hover:bg-gray-100 transition duration-500 rounded ">
+            <div class="mt-2  group  w-full  py-4 hover:bg-gray-100 transition duration-500 rounded">
               <div class="flex justify-center">
               <p class="text-lg">Alimentos</p>
               <svg class="group-hover:animate-pulse fill-current h-5 self-center -z-10 transform group-hover:z-10 group-hover:translate-x-2 transition duration-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/></svg>
               </div>
-              <div class=" transform -translate-x-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 absolute -right-[171px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
+              <div class=" transform -translate-x-10 scale-0 group-hover:scale-100 group-hover:translate-x-0 absolute -right-[171px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
                 <!--Contenido de categorias-->
                 <ul class="">
-                  <li>
-                    @{
+                                      @{
                       string Carnes = "Carnes";
-                    <a href="ProductList/Carnes" @onclick="() => redirect(Carnes)" >Carne</a> 
-                    }
+                      string Despensa = "Despensa";
+
+                  <li>
+                    <a class="cursor-pointer hover:text-red-500 hover:bg-gray-100 transition duration-500 w-full  text-center" @onclick="() => redirect(Carnes)" >Carne</a> 
+                    
                     </li>
                   <li>Congelados</li>
                   <li>Galletas</li>
                   <li>Dulces</li>
+                  <li>Dulces</li>
+                                    <li>
+                    <a class="cursor-pointer hover:text-red-500 hover:bg-gray-100 transition duration-500 w-full  text-center" @onclick="() => redirect(Despensa)" >Despensa</a> 
+                    
+                    </li>
+                    }
                 </ul>
               </div>
             </div>
@@ -45,11 +53,11 @@
               <p class="text-lg">Frutas</p>
               <svg class="group-hover:animate-pulse fill-current h-5 self-center -z-10 transform group-hover:z-10 group-hover:translate-x-2 transition duration-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"/></svg>
               </div>
-              <div class=" transform -translate-x-10 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 absolute -right-[131px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
+              <div class=" transform -translate-x-10 scale-0 group-hover:scale-100 group-hover:translate-x-0 absolute -right-[131px] bg-white hover:shadow-2xl transition duration-500 shadow p-10 rounded z-50">
                 <!--Contenido de categorias-->
                 <ul class="relative space-x-3 flex flex-col justify">
                                                           @{
-                      string Fruta = "Fruta";
+                      string Fruta = "Frutas";
                       string FrutaCongeladas = "FrutaCongeladas";
                   <li>
 

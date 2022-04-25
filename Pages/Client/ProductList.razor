@@ -1,7 +1,7 @@
 ﻿@page "/ProductList"
 @page "/ProductList/{category}"
 @layout ProductLayout;
-@attribute [Authorize(Roles = "Administrator,user")]
+@attribute [Authorize(Roles = "admin,user")]
 @using oswald_online_shop.Data.ProductServices
 
 

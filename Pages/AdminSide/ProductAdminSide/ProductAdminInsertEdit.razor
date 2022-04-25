@@ -1,10 +1,12 @@
 ﻿@page "/productInsertEdit"
 @page "/productInsertEdit/{id:int}"
+@attribute [Authorize(Roles = "admin")]
 @layout Forms
 @using oswald_online_shop.Data.AdminServices.ProductAdminServices
 @inject NavigationManager NavigationManager
  @using System.IO
 @inject IWebHostEnvironment env
+
 @if (product==null)
 {
     <spam>loanding..</spam>
@@ -45,6 +47,7 @@ else
 <option value="">Categorias</option>
 <option value="Frutas">Fruta</option>
 <option value="Carnes">Carnes</option>
+<option value="Despensa">Despensa</option>
 
 </select>
 
@@ -127,7 +130,7 @@ private async void subir()
         }
         else
         {
-        string [] rutas = {env.WebRootPath, "images", file.Name};
+        string [] rutas = {env.WebRootPath, file.Name};
         string nuevo= String.Join("/",rutas);
         using(Stream stream = file.OpenReadStream(maxAllowedSize)){
             var ruta ="/img/";
@@ -136,7 +139,7 @@ private async void subir()
         await stream.CopyToAsync(fs);
         stream.Close();
         fs.Close();
-        product.photoURL = "images/"+file.Name;
+        product.photoURL = file.Name;
         }
         }
 

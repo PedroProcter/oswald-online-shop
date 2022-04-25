@@ -1,4 +1,6 @@
 ﻿@page "/Admin/Delete/{id:int}"
+@attribute [Authorize(Roles = "admin")]
+
 @using oswald_online_shop.Data.AdminServices.SliderAdminServices
 @inject NavigationManager NavigationManager
 @layout Forms
@@ -42,8 +44,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if(id != null || id != 0){
-        sliderImage = await sliderAdminService.getOnlySliderImage(id);
+        try{
+        using(var db = new MyDBContext())
+        {
+            sliderImage = db.Slider.Where(x => x.id == id).FirstOrDefault();
+        }
+        }catch(Exception ex){
+            Console.WriteLine(ex.Message);
         }
     }
 

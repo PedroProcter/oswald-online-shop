@@ -118,7 +118,7 @@ private bool verificacion (){
 
         await auth.UpdateAuthenticationState(new UserSession{
         UserName = username,
-        Role = "user"
+        Role = "admin"
         });
 
         navManager.NavigateTo("/ProductList",true);

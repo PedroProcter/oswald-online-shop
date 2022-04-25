@@ -1,5 +1,6 @@
 ﻿@page "/Admin/Slider"
 @page "/Admin/Slider/{id:int}"
+@attribute [Authorize(Roles = "admin")]
 @inject NavigationManager NavigationManager
 @layout Forms
 @using System.IO
@@ -121,18 +122,17 @@ private async void OnSubmit()
 {
     foreach (var file in selectedFiles)
     {
-        string [] rutas = {env.WebRootPath, "images", file.Name};
+        string [] rutas = {env.WebRootPath, file.Name};
         string nuevo= String.Join("/",rutas);
         using (Stream stream = file.OpenReadStream(maxAllowedSize)){
 
-                    var ruta ="/img";
-                    var ruta_2="/";
-        var path = $"{env.WebRootPath}{ruta}{ruta_2}{file.Name}";
+                    var ruta ="/";
+        var path = $"{env.WebRootPath}{ruta}{file.Name}";
         FileStream fs = File.Create(nuevo);
         await stream.CopyToAsync(fs);
         stream.Close();
         fs.Close();
-        slider.url = $"images/{file.Name}";
+        slider.url = file.Name;
         Console.WriteLine(slider.url);
     }
         this.StateHasChanged();

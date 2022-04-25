@@ -2,8 +2,6 @@
 @layout CartLayout;
 @attribute [Authorize(Roles = "admin,user")]
 @using oswald_online_shop.Data.ProductServices
-
-
         <div class="grid grid-cols-12 gap-14 selection:bg-yellow-300">
       
       @if (products == null)

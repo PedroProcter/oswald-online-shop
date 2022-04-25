@@ -1,7 +1,23 @@
 ﻿<CascadingAuthenticatoinState>
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+            <div class="mt-56 flex justify-center items-center">
+                <div class="flex selection:bg-yellow-300 space-x-3 w-full justify-center">
+            <p>No estas autoriado para acceder a esta ruta</p>
+                </div>
+            </div>            </NotAuthorized>
+            <Authorizing>
+                            <div class="mt-56 flex justify-center items-center">
+                <div class="flex selection:bg-yellow-300 space-x-3 w-full justify-center">
+            <p>Autorizando</p>
+
+
+                </div>
+            </div>  
+            </Authorizing>
+            </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>

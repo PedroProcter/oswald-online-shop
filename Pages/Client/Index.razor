@@ -1,17 +1,11 @@
 ﻿@page "/"
-@inject IJSRuntime js
+@using oswald_online_shop.Data.AdminServices.SliderAdminServices
 
 <div class="mt-10  max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-7xl mx-auto"> 
 
-@* <AuthorizeView>
+@if(sliders == null){
 
-
-
-<NotAuthorized>
-    </NotAuthorized>
-
-</AuthorizeView> *@
-
+}else{
 <MudCarousel Class="mud-width-full rounded-md shadow-2xl shadow-black" Style="height:600px;" ShowArrows="@arrows" ShowBullets="@bullets" AutoCycle="@autocycle" TData="object">
     @foreach(var sliderImage in sliders)
 {
@@ -19,34 +13,38 @@
     <MudCarouselItem Transition="transition" Style="@($"color:{Colors.Grey.Lighten4};")">
 
         <div class="d-flex" style="height:100%">
-                          <img class="w-full object-cover" src="img/supermarket-4052658.jpg" alt="shop">
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition" Color="@Color.Secondary">
-        <div class="d-flex" style="height:100%">
-                          <img class="w-full object-cover" src="img/supermarket-949913.jpg" alt="shop">
-        </div>
-    </MudCarouselItem>
-    <MudCarouselItem Transition="transition">
-        <div class="d-flex" style="height:100%">
-     <video class="w-full h-full object-cover" autoplay loop muted  src="video/Shop - 47601.mp4 "></video>
+                @if(sliderImage.url.Contains("mp4")){
+<video class="w-full h-full object-cover" autoplay loop muted  src="@sliderImage.url"></video>
+    }else{
+                                  <img class="w-full object-cover" src="@sliderImage.url" alt="shop">
+    }
+
         </div>
     </MudCarouselItem>
 }
 
+</MudCarousel>
+}
+
 </div>
 @code{ 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
     private bool arrows = true;
     private bool bullets = true;
     private bool autocycle = true;
     private Transition transition = Transition.Slide;
 
-private async Task DisplayGreetingAlert(){
-    var authState = await authenticationState;
-    var message =$"hello{authState.User.Identity.Name}";
-    await js.InvokeVoidAsync("alert", message);
-}
+        public IEnumerable<SliderOswald> sliders{ get; set; }
+    private static MyDBContext myDBContext = new MyDBContext();
+    public SliderAdminService sliderAdminService = new SliderAdminService(myDBContext); 
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            sliders = await sliderAdminService.getAllSliderImage();
+        }catch(Exception e)
+        {
+            throw e;
+        }
+    }
 }

@@ -49,6 +49,7 @@ else
 <option value="Frutas">Fruta</option>
 <option value="Carnes">Carnes</option>
 <option value="Despensa">Despensa</option>
+<option value="Higiene">Higiene</option>
 
 </select>
 
@@ -109,15 +110,13 @@ py-2
     {
         msg="";
     }
-private void OnInputFileChange(InputFileChangeEventArgs e)
+private async void OnInputFileChange(InputFileChangeEventArgs e)
 {
     selectedFiles = e.GetMultipleFiles();
-    //Message = $"{selectedFiles.Count} file(s) selected";
-    this.StateHasChanged();
-    subir();
-}
+    await subir();
+    }
 
-private async void subir()
+private async Task subir()
 {
     foreach (var file in selectedFiles)
     {
@@ -133,11 +132,12 @@ private async void subir()
         {
         string [] rutas = {env.WebRootPath, file.Name};
         string nuevo= String.Join("/",rutas);
+        await borrarArchivo(file.Name);
         using(Stream stream = file.OpenReadStream(maxAllowedSize)){
             var ruta ="/img/";
         var path = $"{env.WebRootPath}{ruta}{file.Name}";
         FileStream fs = File.Create(nuevo);
-        await stream.CopyToAsync(fs);
+        await stream.CopyToAsync(fs, Convert.ToInt32(maxAllowedSize));
         stream.Close();
         fs.Close();
         product.photoURL = file.Name;
@@ -146,9 +146,17 @@ private async void subir()
 
 
     }
-    this.StateHasChanged();
 }
 
+public async Task borrarArchivo(string name){
+    string[] rutas = {env.WebRootPath, name};
+    string nuevo= String.Join("/",rutas);
+    bool result = File.Exists(nuevo);
+    if(result){
+        File.Delete(nuevo);
+        Console.WriteLine("Borrado");
+    }
+}
     protected override async Task OnInitializedAsync()
     {
         try

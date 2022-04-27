@@ -6,12 +6,12 @@
 
         <UserLoged/>
 
-   <div class="flex h-screen">
-       <div class="border-t-2 hidden md:block">
+   <div class="flex h-screen sticky ">
+       <div class="border-t-2 hidden md:block ">
           <!--Side bar-->
-          <div class="relative flex h-full flex-col border-r-2 border-gray-200 bg-white w-56">
+          <div class="relative flex h-full flex-col border-r-2 border-gray-200 bg-white w-56">            
+
             @{           
-              
           string redire = "";  
              <a @onclick="() => redirect(redire)" class="font-smibold text-2xl text-center pt-3 cursor-pointer">Categorias</a>}
 
@@ -69,8 +69,6 @@
                 </ul>
               </div>
             </div>
-
-
 
 
           </div>

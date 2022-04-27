@@ -53,7 +53,9 @@ else
     {
         try
         {
-            sliders = await sliderAdminService.getAllSliderImage();
+                            using(var db = new MyDBContext()){
+                  sliders = db.Slider.ToList();
+                }
         }catch(Exception e)
         {
             throw e;

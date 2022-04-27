@@ -1,4 +1,4 @@
-﻿@page "/Admin/ProductList"
+﻿  @page "/Admin/ProductList"
 @page "/Admin/ProductList/{category}"
 @attribute [Authorize(Roles = "admin")]
 @layout Logged
@@ -40,7 +40,7 @@
 
         <div class="p-4 md:w-full">
           <div class="h-full overflow-hidden rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 shadow-xl hover:shadow-2xl transition duration-300">
-            <img class="duration-400 w-full scale-110 object-cover object-center transition-all hover:scale-100 md:h-36 lg:h-48" src="@product.photoURL" alt="blog" />
+            <img class="duration-400  scale-110 object-cover object-center transition-all hover:scale-100 w-60 md:h-36 lg:h-72 md:w-64 lg:w-80" src="@product.photoURL" alt="blog" />
             <div class="p-6">
               <h2 class="title-font mb-1 text-xs font-medium tracking-widest text-gray-400">@product.category</h2>
               <h1 class="title-font mb-3 text-lg font-medium text-gray-600">@product.name</h1>
@@ -75,14 +75,14 @@ public  string category {get;set;}
         {
             if (category==null)
             {
-                productsAdmin = await productAdminServices.getAllProducts();
+                using(var db = new MyDBContext()){
+                  productsAdmin = db.Products.ToList();
+                }
             }
             else
             {
                 productsAdmin = await productAdminServices.getProductsByCategory(category);
-            }
-
-            
+            }  
         }
         catch (Exception e)
         {

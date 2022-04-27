@@ -40,8 +40,7 @@
 @code {
       [Parameter]
 public  string category {get;set;}
-  [CascadingParameter]
-  private Task<AuthenticationState> state { get; set; }
+
     public  static IEnumerable<Product> products{ get; set; }
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductService productServices = new ProductService(MydbContext);
@@ -51,11 +50,6 @@ public  string category {get;set;}
         {
             if (category==null)
             {
-                    var uthState = await state;
-
-                    var message= $"{uthState.User.Identity.Name} has logged in";
-                    Console.WriteLine(message);
-
                 products = await productServices.getAllProducts();
 
             }

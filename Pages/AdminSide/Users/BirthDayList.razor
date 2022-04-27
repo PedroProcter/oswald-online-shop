@@ -31,26 +31,19 @@
 </select>
 		<button class="px-8 rounded-r-lg bg-yellow-400  text-gray-800 font-bold p-4 uppercase border-yellow-500 border-t border-b border-r" @onclick="filtro">Buscar</button>
 	</div>
-      <div class="border-l-2 mt-10 border-black">
-
-                            <div class="transform transition cursor-pointer hover:-translate-y-2 ml-10 relative flex items-center px-6 py-4 bg-green-600 text-white rounded mb-10 flex-col md:flex-row space-y-4 md:space-y-0 md:justify-center items-center">
-          
- <button    class="flex justify-center items-center text-2xl  text-white hover:text-gray-300 @disabel"  @onclick="SavedownLoad" >Descargar Listado</button>
-       
-
-                   
-
-        </div>
+      <div class="border-l-2 mt-10">
 @foreach(var clientes in client){
         <div class="transform transition cursor-pointer hover:-translate-y-2 ml-10 relative flex items-center px-6 py-4 bg-pink-600 text-white rounded mb-10 flex-col md:flex-row space-y-4 md:space-y-0">
           <div class="w-5 h-5 bg-pink-600 absolute -left-10 transform -translate-x-2/4 rounded-full z-10 mt-2 md:mt-0"></div>
 
           <div class="w-10 h-1 bg-pink-300 absolute -left-10 z-0"></div>
 
-          <div class="flex-auto"><h1 class="text-xl font-bold">@clientes.name &nbsp; @clientes.email</h1>
+          <div class="flex-auto"><h1 class="text-xl font-bold">@clientes.name &nbsp; @clientes.lastName</h1>
 
             <h1 class="text-lg">@mes(clientes.birthDay)</h1>
           </div>
+          <button    class="text-center text-white hover:text-gray-300 @disabel"  @onclick="() => SavedownLoad(clientes.id)" >Descargar</button>
+
         </div>
 }
       </div>
@@ -86,67 +79,37 @@
             }
         }
 
-public async Task SavedownLoad() {
-    await excel();
+public async Task SavedownLoad(int id) {
+    await excel(id);
         var url = env.WebRootPath;
         var fileURL = "Listado.xlsx";
         var fileName = "Listado.xlsx";
         await js.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
     
 }
-       public async Task excel(){
+       public async Task excel(int ID){
             try{
+            
+                if(ID == 0 || ID ==null){
+                    Console.WriteLine(ID);
+                    return;
+                }else{
                   var woorbook = new XLWorkbook();
-                  var i  =3;
-                  var j = 1;
   var worksheet = woorbook.Worksheets.Add("Listado");
-    worksheet.Cell("F2").Value = "Nombre";
-    worksheet.Cell("G2").Value = "Apellido";
-    worksheet.Cell("H2").Value = "Correo";
-
-    worksheet.Range("F2:H2").Style
-         .Font.SetFontSize(13)
-         .Font.SetBold(true)
-         .Font.SetFontColor(XLColor.White)
-         .Fill.SetBackgroundColor(XLColor.Gray);
-
-
- @*     worksheet.Range("B2:D5")
-         .SetValue("Hi!")
-         .Style.Border.SetOutsideBorder(XLBorderStyleValues.Dotted);
- 
-worksheet.Range("B3:D4").SetValue("hola")
-        .Style
-         .Font.SetFontSize(10)
-         .Font.SetFontColor(XLColor.Gray)
-         .Font.SetItalic(true);
- 
-worksheet.Range("B2:D2").Style
-         .Font.SetFontSize(13)
-         .Font.SetBold(true)
-         .Font.SetFontColor(XLColor.White)
-         .Fill.SetBackgroundColor(XLColor.Gray); *@
-    
+      worksheet.Cell(1,1).Value = "Nombre";
+    worksheet.Cell(1,2).Value = "Apellido";
+    worksheet.Cell(1,3).Value = "Correo";
                             using(var db = new MyDBContext()){
-            IList<Client> clientes =  db.Clients.ToList();
+            IList<Client> clientes =  db.Clients.Where(s => s.id == ID).ToList();
             List<string> _datosUsuario;
     foreach(var cliente in clientes){
-    worksheet.Cell($"F{i}").Value = cliente.name;
-    worksheet.Cell($"G{i}").Value = cliente.lastName;
-    worksheet.Cell($"H{i}").Value = cliente.email;
-    worksheet.Range($"F{i}:H{i}")
-         .Style.Border.SetOutsideBorder(XLBorderStyleValues.Dotted);
-    worksheet.Range($"F{i}:H{i}")
-        .Style
-         .Font.SetFontSize(12)
-         .Font.SetFontColor(XLColor.Black);
-         
-
-    i++;
+    worksheet.Cell(2,1).Value = cliente.name;
+    worksheet.Cell(2,2).Value = cliente.lastName;
+    worksheet.Cell(2,3).Value = cliente.email;
     }
     woorbook.SaveAs($"{env.WebRootPath}/Listado.xlsx");
             }
-                
+                }
             }catch(Exception ex){
                 Console.WriteLine(ex.Message);
             }

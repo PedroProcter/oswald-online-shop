@@ -19,7 +19,7 @@ public override async Task<AuthenticationState> GetAuthenticationStateAsync(){
     if (userSession == null)
         return await Task.FromResult(new AuthenticationState(_anonymous));
     var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>{
-        new Claim(ClaimTypes.Sid, userSession.id),
+        
         new Claim(ClaimTypes.Name, userSession.UserName),
         new Claim(ClaimTypes.Role, userSession.Role)
     

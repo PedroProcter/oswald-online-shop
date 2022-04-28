@@ -158,7 +158,6 @@ public  void retornar_id_personal(){
       var auth = (Authen)authStateProvider;
       await auth.UpdateAuthenticationState(new UserSession
       {
-        id="2",
         UserName = username,
         Role = role
       });

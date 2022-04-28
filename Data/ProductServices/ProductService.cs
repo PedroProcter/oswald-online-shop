@@ -22,7 +22,7 @@ namespace oswald_online_shop.Data.ProductServices
 
         public async Task<IEnumerable<Product>> getAllProducts()
         {
-            return  _dbContext.Products.ToList();
+            return await _dbContext.Products.ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> getProductsByCategory(string category)
@@ -33,6 +33,16 @@ namespace oswald_online_shop.Data.ProductServices
             return await query;
         }
 
+
+        public async Task<IEnumerable<Product>> getProductByID(int id)
+        {
+
+
+            var query= _dbContext.Products
+                .Where(product => product.id == id)
+                .ToListAsync();
+            return await query;
+        }
 
         public async Task<Product> getProduct(int id)
         {

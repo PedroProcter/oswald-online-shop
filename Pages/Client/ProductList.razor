@@ -2,8 +2,9 @@
 @page "/ProductList/{category}"
 @layout ProductLayout;
 @attribute [Authorize(Roles = "admin,user")]
-@using oswald_online_shop.Data.ProductServices
 
+@using oswald_online_shop.Data.ProductServices
+@using oswald_online_shop.Data.OrderServices
 
       <div class="bg-gray-100 p-4">
         <h1 class="text-center text-2xl font-semibold text-slate-800">Listado de productos</h1>
@@ -27,7 +28,7 @@
               <h2 class="title-font mb-1 text-xs font-medium tracking-widest text-gray-400">@product.category</h2>
               <h1 class="title-font mb-3 text-lg font-medium text-gray-600">@product.name</h1>
               <div class="flex flex-wrap items-center justify-center">
-                <button class="shadow-cla-blue rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 px-4 py-1 drop-shadow-md transition duration-300 hover:scale-105">Agregar al carrito</button>
+                <button @onclick="(()=>addToCart(product.id, product.price))"   class="shadow-cla-blue rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 px-4 py-1 drop-shadow-md transition duration-300 hover:scale-105">Agregar al carrito</button>
               </div>
             </div>
           </div>
@@ -38,23 +39,31 @@
 }
 </div>
 @code {
-      [Parameter]
-public  string category {get;set;}
-  [CascadingParameter]
-  private Task<AuthenticationState> state { get; set; }
+    [Parameter]
+    public  string category {get;set;}
+
+    [CascadingParameter]
+    private Task<AuthenticationState> state { get; set; }
+
     public  static IEnumerable<Product> products{ get; set; }
+
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductService productServices = new ProductService(MydbContext);
+    private static OrderService  orderService = new OrderService(MydbContext);
+
+
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             if (category==null)
             {
-                    var uthState = await state;
+                var uthState = await state;
 
-                    var message= $"{uthState.User.Identity.Name} has logged in";
-                    Console.WriteLine(message);
+
+                var message= $"{uthState.User.Identity.Name} has logged in";
+                Console.WriteLine(message);
 
                 products = await productServices.getAllProducts();
 
@@ -73,5 +82,14 @@ public  string category {get;set;}
         }
 
     }
+
+    private async Task addToCart(int productId, double price)
+    {
+
+        var uthState = await state;
+        string idCarrito = uthState.User.Identity.Name; 
+        await orderService.insertOrder(new Orders { cartId=idCarrito, productId=productId, price=price, state="In progress"});
+    }
+
 
 }

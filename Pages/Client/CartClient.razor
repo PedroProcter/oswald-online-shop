@@ -1,10 +1,12 @@
 @page "/user/cart"
 @layout CartLayout;
 @attribute [Authorize(Roles = "admin,user")]
+@inject NavigationManager NavigationManager
+@using oswald_online_shop.Data.OrderServices
 @using oswald_online_shop.Data.ProductServices
         <div class="grid grid-cols-12 gap-14 selection:bg-yellow-300">
       
-      @if (products == null)
+      @if (lstOrdenes==null )
 {
 
      <div class="col-span-8">
@@ -34,27 +36,34 @@
             </div>
           </div>
 }else{
-          <div class="col-span-8 mb-10">
+     <div class="col-span-8 mb-10">
             <div class="w-full">
-                  @foreach(var product in products)
+                 
+                  @foreach(var orden in lstOrdenes)
     {
-      <div class="ml-8  p-10 w-full border-b-2 border-gray-100 drop-shadow-m rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
-            <input type="checkbox" class="self-center accent-pink-500 mr-6" @onchange="eventArgs => { price(product.price, eventArgs.Value); }" >
+                   
 
-          <div class="w-1/4 mr-10 ">
-<img class="object-cover rounded h-56 w-full" src="@product.photoURL" alt="">
+                  
+                   
+             <div class="ml-8  p-10 w-full border-b-2 border-gray-100 drop-shadow-m rounded-lg bg-white hover:bg-slate-50 transition-colors duration-300 flex">
+            <input type="checkbox" class="self-center accent-pink-500 mr-6" @onchange="eventArgs => { price(orden.precioProducto, eventArgs.Value); }" >
+            <div class="w-1/4 mr-10 ">
+            <img class="object-cover rounded h-56 w-full" src="@orden.foto" alt="">
 
           </div>
           <div class="basis-3/4 flex flex-col">
-            <p class="font-semibold text-lg mb-2">@product.name</p>
-            <p class="font-thin">@product.category.</p>
-            <p class="font-thin">$@product.price</p>
+            <p class="font-semibold text-lg mb-2">@orden.nombreProducto</p>
+            <p class="font-thin">@orden.categoriaProducto.</p>
+            <p class="font-thin">$@orden.precioProducto</p>
 <input type="number" class="w-1/3 bg-indigo-100 rounded-lg px-2 py-2"
-       max="@product.Stock" placeholder="Cantidad" min="0" @onchange="eventArgs => { stock(product.Stock, eventArgs.Value); }">
-            <p class="font-thin">@product.Stock unidades</p>
+       max="@orden.stock" placeholder="Cantidad" min="0" @onchange="eventArgs => { stock(orden.stock, eventArgs.Value); }">
+            <p class="font-thin">@orden.stock unidades</p>
+            <button @onclick="()=> eliminarOrden(orden.idOrden)">Eliminar</button>
 
           </div>
-        </div>
+        </div>   
+                    
+                   
 
     }
         
@@ -85,25 +94,91 @@
 
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> state { get; set; }
 
+
+    public  static IEnumerable<Object> orders{ get; set; }
     public  static IEnumerable<Product> products{ get; set; }
-      public double sumaPrecio{ get; set; }
-      public bool hola{ get; set; }
-      public double cantidadComprar{ get; set; }
-      
+    public double sumaPrecio{ get; set; }
+    public bool hola{ get; set; }
+    public double cantidadComprar{ get; set; }
+
+
+
+
+
     public static MyDBContext MydbContext = new MyDBContext();
     private static ProductService productServices = new ProductService(MydbContext);
+    private static OrderService orderService = new OrderService(MydbContext);
+
+    List<ordenes> lstOrdenes = new List<ordenes>();
+
     protected override async Task OnInitializedAsync()
-    {           
+    {       
         try
         {
-            products = await productServices.getAllProducts();
+
+            if (hola == null)
+            {
+
+            }
+            else
+            {
+                var uthState = await state;
+                string idCarrito = uthState.User.Identity.Name;
+                lstOrdenes= lstJoins(idCarrito);
+
+            }
+
         }
         catch (Exception e)
         {
             throw e;
         }
 
+    }
+
+
+    private async Task eliminarOrden(int id)
+    {
+        orderService.deleteOrder(id);
+        NavigationManager.NavigateTo("/productlist");
+    }
+
+       public class ordenes
+        {
+            public int idOrden;
+            public string cart;
+            public string foto;
+            public string nombreProducto;
+            public string categoriaProducto;
+            public double precioProducto;
+            public int stock;
+        }
+       
+
+     public List<ordenes> lstJoins(string idCart)
+        {
+            return (from orden in MydbContext.Orders
+                    join producto in MydbContext.Products on orden.productId equals producto.id
+                    where orden.cartId == idCart
+                    select new ordenes {
+                        idOrden=orden.id,
+                        foto = producto.photoURL,
+                        cart = orden.cartId,
+                        nombreProducto=producto.name,
+                        categoriaProducto=producto.category,
+                        precioProducto=producto.price,
+                        stock=producto.Stock
+
+                    }
+                    ).ToList();
+        }
+    private async Task<IEnumerable<Product>> getOrderProducts(int id)
+    {
+        return products = await  productServices.getProductByID(id);
+        
     }
 
     void stock(double clubID, object checkedValue){

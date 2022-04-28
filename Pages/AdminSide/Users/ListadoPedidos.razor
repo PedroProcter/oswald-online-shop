@@ -1,0 +1,54 @@
+@page "/admin/listadopedidos"
+@attribute [Authorize(Roles = "admin")]
+@layout Logged
+
+
+<div class="w-10/12 md:w-7/12 lg:6/12 mx-auto relative py-20">
+
+    <h1 class="text-3xl text-center font-bold text-blue-500">Listado de Pedidos</h1>
+
+    <div class="border-l-2 mt-10 border-white">
+        @foreach (var pedido in pedidos)
+        {
+            <div
+            class="transform transition cursor-pointer hover:-translate-y-2 ml-10 relative flex items-center px-6 py-4 bg-pink-600 text-white rounded mb-10 flex-col md:flex-row space-y-4 md:space-y-0">
+                <div
+                class="w-5 h-5 bg-pink-600 absolute -left-10 transform -translate-x-2/4 rounded-full z-10 mt-2 md:mt-0">
+                </div>
+
+                <div class="w-10 h-1 bg-pink-300 absolute -left-10 z-0"></div>
+
+                <div class="flex-auto">
+                    <h1 class="text-xl font-bold">ID @pedido.id</h1>
+
+                    <h1 class="text-lg">Status: @pedido.state</h1>
+                    <h1 class="text-lg">Price: @pedido.price</h1>
+                    <button @onclick="@(e => DeletePedido(pedido.id))">delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    IList<Orders> pedidos;
+    protected override async Task OnInitializedAsync()
+    {
+
+        using (var db = new MyDBContext())
+        {
+            pedidos = db.Orders.ToList();
+        }
+    }
+
+    public void DeletePedido(int id)
+    {
+        Console.WriteLine("Delete");
+        using (var db = new MyDBContext())
+        {
+            Orders order = db.Orders.Where(o => o.id == id).ToList()[0];
+            db.Orders.Remove(order);
+            db.SaveChanges();
+        }
+    }
+}

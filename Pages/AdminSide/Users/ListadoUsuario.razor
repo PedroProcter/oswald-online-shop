@@ -18,7 +18,7 @@
 
             <h1 class="text-lg">@clientes.birthDay</h1>
             <h1 class="text-lg">@clientes.email</h1>
-            
+            <button @onclick="@(e => DeleteUser(clientes.id))">delete</button>
           </div>
         </div>
 }
@@ -31,6 +31,15 @@
 
             using(var db = new MyDBContext()){
             client =  db.Clients.ToList();
+            }
+        }
+
+        public void DeleteUser(int id) {
+          Console.WriteLine("Delete");
+          using(var db = new MyDBContext()){
+            Client client = db.Clients.Where(c => c.id == id).ToList()[0];
+            db.Clients.Remove(client);
+            db.SaveChanges();
             }
         }
     }

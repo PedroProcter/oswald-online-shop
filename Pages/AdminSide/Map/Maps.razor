@@ -1,0 +1,40 @@
+@page "/Admin/mapa"
+@inject IJSRuntime JSRuntime
+@attribute [Authorize(Roles = "admin")]
+@layout Logged
+
+<div class="max-w-6xl mx-auto mt-8">
+<select class="w-full mx-auto mb-4">
+<option>Activo</option>
+<option>Proceso</option>
+<option>Enviado</option>
+
+</select>
+
+<div id="map" style="height:500px;width:100%;"></div>
+</div>
+
+
+
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+                List<coordenadas> listOfUsers = new List<coordenadas>()
+        {
+        new coordenadas() { latitud = 18.5107936, longitud = -69.9619569 },
+        new coordenadas() { latitud = 18.4822496, longitud = -69.9132562 },
+        new coordenadas() { latitud = 18.4837096, longitud = -69.9415888 },
+        };
+
+        if (firstRender) { 
+            await JSRuntime.InvokeVoidAsync("initMap", listOfUsers);
+        } 
+    }
+
+    public class coordenadas{ 
+       public double  latitud { get; set; }
+       public double longitud { get; set; }
+    }
+}

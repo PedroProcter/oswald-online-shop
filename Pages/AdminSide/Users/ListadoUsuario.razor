@@ -18,7 +18,10 @@
 
             <h1 class="text-lg">@clientes.birthDay</h1>
             <h1 class="text-lg">@clientes.email</h1>
-            <button @onclick="@(e => DeleteUser(clientes.id))">delete</button>
+                                <div class="w-full w-full flex justify-center items-center ">
+                                            <button class="bg-red-500 px-4 py-2 hover:bg-red-400 transition duration-300 font-normal" @onclick="@(e => DeleteUser(clientes.id))">Delete</button>
+                    </div>
+            
           </div>
         </div>
 }

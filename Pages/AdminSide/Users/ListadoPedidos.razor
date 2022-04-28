@@ -1,4 +1,4 @@
-@page "/admin/listadopedidos"
+@page "/Admin/listadopedidos"
 @attribute [Authorize(Roles = "admin")]
 @layout Logged
 
@@ -23,7 +23,10 @@
 
                     <h1 class="text-lg">Status: @pedido.state</h1>
                     <h1 class="text-lg">Price: @pedido.price</h1>
-                    <button @onclick="@(e => DeletePedido(pedido.id))">delete</button>
+                    <div class="w-full w-full flex justify-center items-center ">
+                                            <button class="bg-red-500 px-4 py-2 hover:bg-red-400 transition duration-300 font-normal " @onclick="@(e => DeletePedido(pedido.id))">Delete</button>
+                    </div>
+
                 </div>
             </div>
         }
